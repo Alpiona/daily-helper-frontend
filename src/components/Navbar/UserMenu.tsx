@@ -1,4 +1,3 @@
-import { authModalState } from "@/atoms/authModalAtom";
 import { userState, UserState } from "@/atoms/userAtom";
 import { UpdateApiAuth } from "@/providers/Api";
 import { ChevronDownIcon } from "@chakra-ui/icons";
@@ -16,18 +15,17 @@ import { FaRedditSquare } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { MdOutlineLogin } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
-import { useResetRecoilState, useSetRecoilState } from "recoil";
+import { useResetRecoilState } from "recoil";
 
 type UserMenuProps = {
   user?: UserState | null;
 };
 
 const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
-  const setAuthModalState = useSetRecoilState(authModalState);
-  const setUser = useResetRecoilState(userState);
+  const resetUser = useResetRecoilState(userState);
 
   const logout = async () => {
-    setUser();
+    resetUser();
     UpdateApiAuth();
   };
 
@@ -94,7 +92,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                 fontSize="10pt"
                 fontWeight={700}
                 _hover={{ bg: "blue.500", color: "white" }}
-                onClick={() => setAuthModalState({ open: true, view: "login" })}
+                onClick={() => {}}
               >
                 <Icon fontSize={20} mr={2} as={MdOutlineLogin} />
                 Log In / Sign Up

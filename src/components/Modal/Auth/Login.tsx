@@ -1,4 +1,3 @@
-import { authModalState } from "@/atoms/authModalAtom";
 import { userState } from "@/atoms/userAtom";
 import { UpdateApiAuth } from "@/providers/Api";
 import { UserService } from "@/services/UserService";
@@ -9,7 +8,6 @@ import { useSetRecoilState } from "recoil";
 type LoginProps = {};
 
 const Login: React.FC<LoginProps> = () => {
-  const setAuthModalState = useSetRecoilState(authModalState);
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
@@ -27,7 +25,6 @@ const Login: React.FC<LoginProps> = () => {
       .then((response) => {
         setUser({ email: loginForm.email, token: response.data.token });
         UpdateApiAuth(response.data.token);
-        setAuthModalState((prev) => ({ ...prev, open: false }));
       })
       .catch((error) => setError(error.response.data));
   };
@@ -99,12 +96,7 @@ const Login: React.FC<LoginProps> = () => {
           fontSize="9pt"
           color="blue.500"
           cursor="pointer"
-          onClick={() =>
-            setAuthModalState((prev) => ({
-              ...prev,
-              view: "resetPassword",
-            }))
-          }
+          onClick={() => {}}
         >
           Reset
         </Text>
@@ -115,12 +107,7 @@ const Login: React.FC<LoginProps> = () => {
           color="blue.500"
           fontWeight={700}
           cursor="pointer"
-          onClick={() =>
-            setAuthModalState((prev) => ({
-              ...prev,
-              view: "signUp",
-            }))
-          }
+          onClick={() => {}}
         >
           Sign Up
         </Text>

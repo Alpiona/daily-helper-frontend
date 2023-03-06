@@ -1,12 +1,8 @@
-import { authModalState } from "@/atoms/authModalAtom";
-import { UserState } from "@/atoms/userAtom";
 import { UserService } from "@/services/UserService";
 import { Button, Flex, Input, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { useSetRecoilState } from "recoil";
 
 const SignUp: React.FC = () => {
-  const setAuthModalState = useSetRecoilState(authModalState);
   const [signUpForm, setSignUpForm] = useState({
     email: "",
     password: "",
@@ -17,23 +13,20 @@ const SignUp: React.FC = () => {
   //Firebase logic
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (error) setError("");
+
     if (signUpForm.password !== signUpForm.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
-    const response = await UserService.newUser({
+    UserService.newUser({
       email: signUpForm.email,
       password: signUpForm.password,
       passwordConfirmation: signUpForm.confirmPassword,
     })
-      .then(() =>
-        setAuthModalState((prev) => ({
-          ...prev,
-          open: false,
-        }))
-      )
+      .then(() => {})
       .catch((error) => setError(error.response.data));
   };
 
@@ -43,8 +36,6 @@ const SignUp: React.FC = () => {
       [event.target.name]: event.target.value,
     }));
   };
-
-  const createUserDocument = async (user: UserState) => {};
 
   return (
     <form onSubmit={onSubmit}>
@@ -126,12 +117,7 @@ const SignUp: React.FC = () => {
           color="blue.500"
           fontWeight={700}
           cursor="pointer"
-          onClick={() =>
-            setAuthModalState((prev) => ({
-              ...prev,
-              view: "login",
-            }))
-          }
+          onClick={() => {}}
         >
           Log In
         </Text>

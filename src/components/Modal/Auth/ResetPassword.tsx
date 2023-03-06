@@ -1,11 +1,8 @@
 import { Button, Flex, Icon, Input, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { BsDot, BsReddit } from "react-icons/bs";
-import { useSetRecoilState } from "recoil";
-import { authModalState } from "../../../atoms/authModalAtom";
 
 const ResetPassword: React.FC = () => {
-  const setAuthModalState = useSetRecoilState(authModalState);
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -64,27 +61,9 @@ const ResetPassword: React.FC = () => {
         fontWeight={700}
         cursor="pointer"
       >
-        <Text
-          onClick={() =>
-            setAuthModalState((prev) => ({
-              ...prev,
-              view: "login",
-            }))
-          }
-        >
-          LOGIN
-        </Text>
+        <Text onClick={() => {}}>LOGIN</Text>
         <Icon as={BsDot} />
-        <Text
-          onClick={() =>
-            setAuthModalState((prev) => ({
-              ...prev,
-              view: "signUp",
-            }))
-          }
-        >
-          SIGN UP
-        </Text>
+        <Text onClick={() => {}}>SIGN UP</Text>
       </Flex>
     </Flex>
   );
