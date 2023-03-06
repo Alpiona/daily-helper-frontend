@@ -11,9 +11,11 @@ type NewUserParams = {
   passwordConfirmation: string;
 };
 
-const logIn = (data: LogInParams) => Api.post("users/login", data);
+const logIn = async (data: LogInParams) =>
+  await Api.post({ path: "/api/proxy/login", body: data });
 
-const newUser = (data: NewUserParams) => Api.post("users", data);
+const newUser = async (data: NewUserParams) =>
+  await Api.post({ path: "/api/proxy/signup", body: data });
 
 export const UserService = {
   logIn,

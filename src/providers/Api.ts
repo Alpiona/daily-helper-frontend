@@ -1,15 +1,43 @@
-import axios from "axios";
+type QueryParams = {
+  [key: string]: any;
+};
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+type BodyParams = {
+  [key: string]: any;
+};
 
-export const Api = axios.create({ baseURL });
+type GetParams = {
+  path: string;
+  queryParams?: QueryParams;
+};
 
-export const UpdateApiAuth = (token?: string) => {
-  if (token) {
-    Api.defaults.headers.common.Authorization = `Bearer ${token}`;
+type PostParams = {
+  path: string;
+  queryParams?: QueryParams;
+  body?: BodyParams;
+};
 
-    return;
-  }
+const get = async ({ path, queryParams }: GetParams) => {
+  const response = await fetch(path + new URLSearchParams(queryParams), {
+    method: "GET",
+  });
 
-  delete Api.defaults.headers.common["Authorization"];
+  return response.json();
+};
+
+const post = async ({ path, queryParams, body }: PostParams) => {
+  const response = await fetch(path + new URLSearchParams(queryParams), {
+    body: JSON.stringify(body),
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return response.json();
+};
+
+export const Api = {
+  get,
+  post,
 };

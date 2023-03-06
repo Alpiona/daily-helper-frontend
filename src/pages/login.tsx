@@ -1,3 +1,4 @@
+import { UserService } from "@/services/UserService";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 
@@ -12,17 +13,16 @@ const Login: React.FC<LoginProps> = () => {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      const response = await UserService.logIn({
+        email: loginForm.email,
+        password: loginForm.password,
+      });
 
-    fetch("/api/proxy/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: loginForm.email }),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log("data", data))
-      .catch((error) => console.log("error", error));
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

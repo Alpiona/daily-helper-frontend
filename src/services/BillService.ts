@@ -1,36 +1,36 @@
-import { Api } from "@/providers/Api";
+// import { Api } from "@/providers/Api";
 
-type GetOneParams = {
-  billId: string;
-};
+// type GetOneParams = {
+//   billId: string;
+// };
 
-type GetListParams = {
-  orderBy?: string;
-  orderByDirection?: "asc" | "desc";
-};
+// type GetListParams = {
+//   orderBy?: string;
+//   orderByDirection?: "asc" | "desc";
+// };
 
-type DeleteOneParams = {
-  billId: string;
-};
+// type DeleteOneParams = {
+//   billId: string;
+// };
 
-type UpdateParams = {};
+// type UpdateParams = {};
 
-type CreateParams = {};
+// type CreateParams = {};
 
-const getOne = (data: GetOneParams) => Api.get(`bills/${data.billId}`);
+// const getOne = (data: GetOneParams) => Api.get(`bills/${data.billId}`);
 
-const getList = (data: GetListParams) => Api.get("bills", { params: data });
+// const getList = (data: GetListParams) => Api.get("bills", { params: data });
 
-const deleteOne = (data: DeleteOneParams) => Api.delete(`bills/${data.billId}`);
+// const deleteOne = (data: DeleteOneParams) => Api.delete(`bills/${data.billId}`);
 
-const update = (data: UpdateParams) => Api.post("users", data);
+// const update = (data: UpdateParams) => Api.post("users", data);
 
-const create = (data: CreateParams) => Api.post("users", data);
+// const create = (data: CreateParams) => Api.post("users", data);
 
-export const UserService = {
-  getOne,
-  getList,
-  deleteOne,
-  update,
-  create,
-};
+// export const BillService = {
+//   getOne,
+//   getList,
+//   deleteOne,
+//   update,
+//   create,
+// };
