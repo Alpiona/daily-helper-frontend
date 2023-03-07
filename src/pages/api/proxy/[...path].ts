@@ -18,10 +18,12 @@ export const config = {
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   return new Promise((resolve, reject) => {
     const pathname = url.parse(req.url!).pathname;
-    const isLogin = pathname === "/api/proxy/login";
+    console.log("url", API_URL);
+    console.log("pathname", pathname);
+    const isLogin = pathname === "/api/proxy/users/login";
 
     // req.url = req.url.replace(/^\/api\/proxy/, '')
-    req.url = req.url!.replace("proxy", "auth");
+    req.url = req.url!.replace("/api/proxy", "");
 
     req.headers.cookie = "";
 
@@ -35,7 +37,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         if (isLogin) {
           proxyRes.on("end", () => {
             try {
-              const { token, email, error } = JSON.parse(responseBody);
+              const { token, email, errors } = JSON.parse(responseBody);
 
               if (token && email) {
                 const cookies = new Cookies(req, res);
@@ -49,7 +51,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 });
                 res.status(proxyRes.statusCode!).json({ loggedIn: true });
               } else {
-                res.status(proxyRes.statusCode!).json({ error });
+                res.status(proxyRes.statusCode!).json({ errors });
               }
               resolve(null);
             } catch (err) {
@@ -75,7 +77,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       })
       .once("error", reject)
       .web(req, res, {
-        target: "http://localhost:3000",
+        target: API_URL,
         autoRewrite: false,
         selfHandleResponse: isLogin,
       });

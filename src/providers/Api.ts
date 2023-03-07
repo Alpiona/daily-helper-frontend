@@ -27,11 +27,11 @@ const get = async ({ path, queryParams }: GetParams) => {
 
 const post = async ({ path, queryParams, body }: PostParams) => {
   const response = await fetch(path + new URLSearchParams(queryParams), {
-    body: JSON.stringify(body),
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify(body),
   });
 
   return response.json();

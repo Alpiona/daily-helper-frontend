@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
-  console.log(request.nextUrl.toString());
   if (
     request.nextUrl.pathname.includes("login") ||
     request.nextUrl.pathname.includes("sign-up")
