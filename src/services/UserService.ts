@@ -12,7 +12,7 @@ type NewUserParams = {
 };
 
 const logIn = async (data: LogInParams) =>
-  await Api.post({ path: "/api/proxy/users/login", body: data });
+  await Api.post({ path: "/users/login", body: data });
 
 const signUp = async (data: NewUserParams) =>
   await Api.post({ path: "/users", body: data });

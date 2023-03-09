@@ -3,31 +3,28 @@ import { NextResponse } from "next/server";
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
+  const token = request.cookies.get("token")?.value;
+  console.log(token);
+
   if (
-    request.nextUrl.pathname.includes("login") ||
-    request.nextUrl.pathname.includes("sign-up")
+    token &&
+    (request.nextUrl.pathname.includes("log-in") ||
+      request.nextUrl.pathname.includes("sign-up"))
   ) {
-    return NextResponse.next();
-  }
-
-  // return NextResponse.next();
-  const sessionCookie = request.cookies.get("session")?.value;
-
-  if (!sessionCookie) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/home", request.url));
   }
 
   if (
-    !sessionCookie.hasOwnProperty("token") ||
-    !sessionCookie.hasOwnProperty("email")
+    !token &&
+    !request.nextUrl.pathname.includes("log-in") &&
+    !request.nextUrl.pathname.includes("sign-up")
   ) {
-    request.cookies.delete("session");
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/auth/log-in", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/index", "/bills/:path*"],
+  matcher: ["/home", "/auth/:path*", "/bills/:path*"],
 };

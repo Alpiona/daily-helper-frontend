@@ -1,36 +1,49 @@
-// import { Api } from "@/providers/Api";
+import { Api } from "@/providers/Api";
 
-// type GetOneParams = {
-//   billId: string;
-// };
+type GetOneParams = {
+  billId: string;
+};
 
-// type GetListParams = {
-//   orderBy?: string;
-//   orderByDirection?: "asc" | "desc";
-// };
+type GetListParams = {
+  orderBy?: string;
+  orderByDirection?: "asc" | "desc";
+};
 
-// type DeleteOneParams = {
-//   billId: string;
-// };
+type DeleteOneParams = {
+  billId: string;
+};
 
-// type UpdateParams = {};
+type UpdateParams = {
+  billId: string;
+  name: string;
+  description?: string;
+  dueDay?: number;
+};
 
-// type CreateParams = {};
+type CreateParams = {
+  name: string;
+  description?: string;
+  dueDay?: number;
+};
 
-// const getOne = (data: GetOneParams) => Api.get(`bills/${data.billId}`);
+const getOne = ({ billId }: GetOneParams) =>
+  Api.get({ path: `/bills/${billId}` });
 
-// const getList = (data: GetListParams) => Api.get("bills", { params: data });
+const getList = (data?: GetListParams) =>
+  Api.get({ path: "/bills", queryParams: data });
 
-// const deleteOne = (data: DeleteOneParams) => Api.delete(`bills/${data.billId}`);
+const deleteOne = ({ billId }: DeleteOneParams) =>
+  Api.deleteOne({ path: `/bills/${billId}` });
 
-// const update = (data: UpdateParams) => Api.post("users", data);
+const update = ({ billId, name, description, dueDay }: UpdateParams) =>
+  Api.put({ path: `/bills/${billId}`, body: { name, description, dueDay } });
 
-// const create = (data: CreateParams) => Api.post("users", data);
+const create = (data: CreateParams) => Api.post({ path: "/bills", body: data });
 
-// export const BillService = {
-//   getOne,
-//   getList,
-//   deleteOne,
-//   update,
-//   create,
-// };
+export const BillService = {
+  getOne,
+  getList,
+  deleteOne,
+  update,
+  create,
+};

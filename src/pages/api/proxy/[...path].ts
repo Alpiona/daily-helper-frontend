@@ -18,8 +18,6 @@ export const config = {
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   return new Promise((resolve, reject) => {
     const pathname = url.parse(req.url!).pathname;
-    console.log("url", API_URL);
-    console.log("pathname", pathname);
     const isLogin = pathname === "/api/proxy/users/login";
 
     // req.url = req.url.replace(/^\/api\/proxy/, '')
@@ -37,16 +35,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         if (isLogin) {
           proxyRes.on("end", () => {
             try {
-              const { token, email, errors } = JSON.parse(responseBody);
+              const { token, expiresAt, errors } = JSON.parse(responseBody);
 
-              if (token && email) {
+              if (token) {
                 const cookies = new Cookies(req, res);
                 cookies.set("token", token, {
                   httpOnly: true,
-                  sameSite: "lax", // CSRF protection
-                });
-                cookies.set("email", email, {
-                  httpOnly: true,
+                  expires: new Date(expiresAt),
                   sameSite: "lax", // CSRF protection
                 });
                 res.status(proxyRes.statusCode!).json({ loggedIn: true });

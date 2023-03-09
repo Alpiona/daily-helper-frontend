@@ -2,31 +2,36 @@ import { UserService } from "@/services/UserService";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 
-type LoginProps = {};
-
-const Login: React.FC<LoginProps> = () => {
-  const [loginForm, setLoginForm] = useState({
+const SignUp: React.FC = () => {
+  const [signUpForm, setSignUpForm] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [error, setError] = useState("");
 
+  //Firebase logic
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const response = await UserService.logIn({
-        email: loginForm.email,
-        password: loginForm.password,
-      });
 
-      console.log(response);
-    } catch (err) {
-      console.log(err);
+    if (error) setError("");
+
+    if (signUpForm.password !== signUpForm.confirmPassword) {
+      setError("Passwords do not match");
+      return;
     }
+
+    UserService.signUp({
+      email: signUpForm.email,
+      password: signUpForm.password,
+      passwordConfirmation: signUpForm.confirmPassword,
+    })
+      .then(() => {})
+      .catch((error) => setError(error.response.data));
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLoginForm((prev) => ({
+    setSignUpForm((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
@@ -86,34 +91,43 @@ const Login: React.FC<LoginProps> = () => {
             }}
             bg="gray.50"
           />
+          <Input
+            required
+            name="confirmPassword"
+            placeholder="confirm password"
+            type="password"
+            mb={2}
+            onChange={onChange}
+            fontSize="10pt"
+            _placeholder={{ color: "gray.500" }}
+            _hover={{
+              bg: "white",
+              border: "1px solid",
+              borderColor: "blue.500",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "white",
+              border: "1px solid",
+              borderColor: "blue.500",
+            }}
+            bg="gray.50"
+          />
           <Text textAlign="center" color="red" fontSize="10pt">
             {error}
           </Text>
           <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-            Log In
+            Sign Up
           </Button>
-          <Flex justifyContent="center" mb={2}>
-            <Text fontSize="9pt" mr={1}>
-              Forgot your password?
-            </Text>
-            <Text
-              fontSize="9pt"
-              color="blue.500"
-              cursor="pointer"
-              onClick={() => {}}
-            >
-              Reset
-            </Text>
-          </Flex>
           <Flex fontSize="9pt" justifyContent="center">
-            <Text mr={1}>New here?</Text>
+            <Text mr={1}>Already registered?</Text>
             <Text
               color="blue.500"
               fontWeight={700}
               cursor="pointer"
               onClick={() => {}}
             >
-              Sign Up
+              Log In
             </Text>
           </Flex>
         </form>
@@ -122,4 +136,4 @@ const Login: React.FC<LoginProps> = () => {
   );
 };
 
-export default Login;
+export default SignUp;

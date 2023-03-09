@@ -1,37 +1,56 @@
-type QueryParams = {
-  [key: string]: any;
-};
-
-type BodyParams = {
-  [key: string]: any;
-};
-
-type GetParams = {
+type RequestParams = {
   path: string;
-  queryParams?: QueryParams;
+  queryParams?: { [key: string]: any };
+  body?: { [key: string]: any };
 };
 
-type PostParams = {
-  path: string;
-  queryParams?: QueryParams;
-  body?: BodyParams;
-};
-
-const get = async ({ path, queryParams }: GetParams) => {
-  const response = await fetch(path + new URLSearchParams(queryParams), {
-    method: "GET",
-  });
+const get = async ({ path, queryParams }: RequestParams) => {
+  const response = await fetch(
+    `api/proxy${path}` + new URLSearchParams(queryParams),
+    {
+      method: "GET",
+    }
+  );
 
   return response.json();
 };
 
-const post = async ({ path, queryParams, body }: PostParams) => {
-  const response = await fetch(path + new URLSearchParams(queryParams), {
-    method: "POST",
+const post = async ({ path, queryParams, body }: RequestParams) => {
+  const response = await fetch(
+    "api/" + path + new URLSearchParams(queryParams),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }
+  );
+
+  return response.json();
+};
+
+const put = async ({ path, queryParams, body }: RequestParams) => {
+  const response = await fetch(
+    `api/proxy${path}` + new URLSearchParams(queryParams),
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }
+  );
+
+  return response.json();
+};
+
+const deleteOne = async ({ path }: RequestParams) => {
+  const response = await fetch(`api/proxy${path}`, {
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(body),
   });
 
   return response.json();
@@ -40,4 +59,6 @@ const post = async ({ path, queryParams, body }: PostParams) => {
 export const Api = {
   get,
   post,
+  put,
+  deleteOne,
 };

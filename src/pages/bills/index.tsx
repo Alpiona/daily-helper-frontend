@@ -14,13 +14,18 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
-import React, { useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
+import { useState } from "react";
 
 type Bill = {
   name: string;
   dueDay: number;
   paidAt?: Date;
 };
+
+interface Props {
+  bills: Bill[];
+}
 
 const billsListExample: Bill[] = [
   { name: "CESAN", dueDay: 5, paidAt: undefined },
@@ -31,10 +36,6 @@ const billsListExample: Bill[] = [
 const BillsPage: React.FC = () => {
   const [bills, setBills] = useState<Bill[]>([]);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-
-  useEffect(() => {
-    setBills(billsListExample);
-  }, []);
 
   return (
     <>
@@ -81,6 +82,23 @@ const BillsPage: React.FC = () => {
       </Box>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const res = await fetch(
+    "http://" + context.req.headers.host + "/api/proxy/bills"
+  );
+
+  if (res.status === 401) {
+    context.res.setHeader(
+      "Set-Cookie",
+      "token=delete; Max-Age=0; HttpOnly=true; SameSite=Lax"
+    );
+  }
+
+  return {
+    props: {}, // will be passed to the page component as props
+  };
 };
 
 export default BillsPage;
