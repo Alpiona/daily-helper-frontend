@@ -1,14 +1,22 @@
 type RequestParams = {
   path: string;
-  queryParams?: { [key: string]: any };
+  queryParams?: { [key: string]: any | undefined };
   body?: { [key: string]: any };
+  token?: string;
 };
 
-const get = async ({ path, queryParams }: RequestParams) => {
+const baseUrl = process.env.API_URL || "/api/";
+
+const get = async ({ path, queryParams, token }: RequestParams) => {
   const response = await fetch(
-    `api/proxy${path}` + new URLSearchParams(queryParams),
+    baseUrl + path + new URLSearchParams(queryParams),
     {
       method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 
@@ -17,13 +25,14 @@ const get = async ({ path, queryParams }: RequestParams) => {
 
 const post = async ({ path, queryParams, body }: RequestParams) => {
   const response = await fetch(
-    "api/" + path + new URLSearchParams(queryParams),
+    baseUrl + path + new URLSearchParams(queryParams),
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
+      credentials: "include",
     }
   );
 
@@ -32,7 +41,7 @@ const post = async ({ path, queryParams, body }: RequestParams) => {
 
 const put = async ({ path, queryParams, body }: RequestParams) => {
   const response = await fetch(
-    `api/proxy${path}` + new URLSearchParams(queryParams),
+    baseUrl + path + new URLSearchParams(queryParams),
     {
       method: "PUT",
       headers: {
@@ -46,7 +55,7 @@ const put = async ({ path, queryParams, body }: RequestParams) => {
 };
 
 const deleteOne = async ({ path }: RequestParams) => {
-  const response = await fetch(`api/proxy${path}`, {
+  const response = await fetch(baseUrl + path, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

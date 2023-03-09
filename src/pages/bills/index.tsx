@@ -1,4 +1,5 @@
 import BillModal from "@/components/Modal/Bill/BillModal";
+import { BillService } from "@/services/BillService";
 import {
   Box,
   Button,
@@ -27,14 +28,7 @@ interface Props {
   bills: Bill[];
 }
 
-const billsListExample: Bill[] = [
-  { name: "CESAN", dueDay: 5, paidAt: undefined },
-  { name: "EDP", dueDay: 8, paidAt: new Date() },
-  { name: "Aluguel", dueDay: 2, paidAt: undefined },
-];
-
-const BillsPage: React.FC = () => {
-  const [bills, setBills] = useState<Bill[]>([]);
+const BillsPage: React.FC<Props> = ({ bills = [] }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   return (
@@ -85,15 +79,19 @@ const BillsPage: React.FC = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await fetch(
-    "http://" + context.req.headers.host + "/api/proxy/bills"
-  );
+  const token = context.req.cookies["token"];
 
-  if (res.status === 401) {
-    context.res.setHeader(
-      "Set-Cookie",
-      "token=delete; Max-Age=0; HttpOnly=true; SameSite=Lax"
-    );
+  if (token) {
+    const res = await BillService.getList({}, token);
+
+    console.log(res);
+
+    if (res.status === 401) {
+      context.res.setHeader(
+        "Set-Cookie",
+        "token=delete; Max-Age=0; HttpOnly=true; SameSite=Lax"
+      );
+    }
   }
 
   return {

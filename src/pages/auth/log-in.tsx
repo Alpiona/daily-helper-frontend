@@ -1,6 +1,8 @@
 import { UserService } from "@/services/UserService";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useCookies } from "react-cookie";
 
 type LoginProps = {};
 
@@ -10,14 +12,24 @@ const Login: React.FC<LoginProps> = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const router = useRouter();
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     try {
       const response = await UserService.logIn({
         email: loginForm.email,
         password: loginForm.password,
       });
+
+      if (response.token) {
+        setCookie("token", response.token, { path: "/" });
+        router.push("/home");
+      } else {
+        setError(response.errors[0].message);
+      }
     } catch (err) {
       console.log(err);
     }

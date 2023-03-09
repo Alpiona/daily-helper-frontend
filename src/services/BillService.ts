@@ -27,18 +27,33 @@ type CreateParams = {
 };
 
 const getOne = ({ billId }: GetOneParams) =>
-  Api.get({ path: `/bills/${billId}` });
+  Api.get({ path: `bills/${billId}` });
 
-const getList = (data?: GetListParams) =>
-  Api.get({ path: "/bills", queryParams: data });
+const getList = (
+  { orderBy, orderByDirection }: GetListParams,
+  token: string
+) => {
+  const queryParams = {};
+  if (orderBy) Object.assign(queryParams, { orderBy });
+  if (orderByDirection) Object.assign(queryParams, { orderByDirection });
 
-const deleteOne = ({ billId }: DeleteOneParams) =>
-  Api.deleteOne({ path: `/bills/${billId}` });
+  return Api.get({
+    path: "bills",
+    queryParams,
+    token,
+  });
+};
 
-const update = ({ billId, name, description, dueDay }: UpdateParams) =>
-  Api.put({ path: `/bills/${billId}`, body: { name, description, dueDay } });
+const deleteOne = ({ billId }: DeleteOneParams, token: string) =>
+  Api.deleteOne({ path: `bills/${billId}` });
 
-const create = (data: CreateParams) => Api.post({ path: "/bills", body: data });
+const update = (
+  { billId, name, description, dueDay }: UpdateParams,
+  token: string
+) => Api.put({ path: `bills/${billId}`, body: { name, description, dueDay } });
+
+const create = (data: CreateParams, token: string) =>
+  Api.post({ path: "bills", body: data });
 
 export const BillService = {
   getOne,
