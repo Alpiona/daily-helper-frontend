@@ -23,13 +23,14 @@ const get = async ({ path, queryParams, token }: RequestParams) => {
   return response.json();
 };
 
-const post = async ({ path, queryParams, body }: RequestParams) => {
+const post = async ({ path, queryParams, body, token }: RequestParams) => {
   const response = await fetch(
     baseUrl + path + new URLSearchParams(queryParams),
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(body),
       credentials: "include",

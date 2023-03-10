@@ -20,7 +20,7 @@ import { useState } from "react";
 
 type Bill = {
   name: string;
-  dueDay: number;
+  due_day: number;
   paidAt?: Date;
 };
 
@@ -57,7 +57,7 @@ const BillsPage: React.FC<Props> = ({ bills = [] }) => {
               {bills.map((b) => (
                 <Tr key={b.name}>
                   <Td>{b.name}</Td>
-                  <Td>{b.dueDay}</Td>
+                  <Td>{b.due_day}</Td>
                   <Td>{b.paidAt ? format(b.paidAt, "dd/MM/yyyy") : "--"}</Td>
                 </Tr>
               ))}
@@ -81,21 +81,19 @@ const BillsPage: React.FC<Props> = ({ bills = [] }) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const token = context.req.cookies["token"];
 
-  if (token) {
-    const res = await BillService.getList({}, token);
+  const res = await BillService.getList({}, token!);
 
-    console.log(res);
+  console.log(res);
 
-    if (res.status === 401) {
-      context.res.setHeader(
-        "Set-Cookie",
-        "token=delete; Max-Age=0; HttpOnly=true; SameSite=Lax"
-      );
-    }
+  if (res.status === 401) {
+    context.res.setHeader(
+      "Set-Cookie",
+      "token=delete; Max-Age=0; HttpOnly=true; SameSite=Lax"
+    );
   }
 
   return {
-    props: {}, // will be passed to the page component as props
+    props: { bills: res.data }, // will be passed to the page component as props
   };
 };
 
