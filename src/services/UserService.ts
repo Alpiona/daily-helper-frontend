@@ -5,6 +5,11 @@ type LogInParams = {
   password: string;
 };
 
+type LogInData = {
+  token: string;
+  expireIn: string;
+};
+
 type SignUpUserParams = {
   email: string;
   password: string;
@@ -12,10 +17,10 @@ type SignUpUserParams = {
 };
 
 const logIn = async (data: LogInParams) =>
-  await Api.post({ path: "users/log-in", body: data });
+  await Api.post<LogInData>({ path: "users/log-in", body: data });
 
 const signUp = async (data: SignUpUserParams) =>
-  await Api.post({ path: "users", body: data });
+  await Api.post<undefined>({ path: "users", body: data });
 
 export const UserService = {
   logIn,

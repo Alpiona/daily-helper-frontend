@@ -13,21 +13,23 @@ const SignUp: React.FC = () => {
   //Firebase logic
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (error) setError("");
+    setError("");
 
     if (signUpForm.password !== signUpForm.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
-    UserService.signUp({
+    const { errors } = await UserService.signUp({
       email: signUpForm.email,
       password: signUpForm.password,
       passwordConfirmation: signUpForm.confirmPassword,
-    })
-      .then(() => {})
-      .catch((error) => setError(error.response.data));
+    });
+
+    if (errors) {
+      const errorMessage = errors[0].message;
+      setError(errorMessage);
+    }
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

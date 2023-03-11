@@ -17,21 +17,23 @@ const Login: React.FC<LoginProps> = () => {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError("");
 
     try {
-      const response = await UserService.logIn({
+      const { data, errors } = await UserService.logIn({
         email: loginForm.email,
         password: loginForm.password,
       });
 
-      if (response.token) {
-        setCookie("token", response.token, { path: "/" });
+      if (errors) {
+        const errorMessage = errors[0].message;
+        setError(errorMessage);
+      } else if (data) {
+        setCookie("token", data.token, { path: "/" });
         router.push("/home");
-      } else {
-        setError(response.errors[0].message);
       }
     } catch (err) {
-      console.log(err);
+      setError("Error unexpected, try again later");
     }
   };
 

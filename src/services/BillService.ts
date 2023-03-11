@@ -1,33 +1,15 @@
 import { Api } from "@/providers/Api";
-
-type GetOneParams = {
-  billId: string;
-};
-
-type GetListParams = {
-  orderBy?: string;
-  orderByDirection?: "asc" | "desc";
-};
-
-type DeleteOneParams = {
-  billId: string;
-};
-
-type UpdateParams = {
-  billId: string;
-  name: string;
-  description?: string;
-  dueDay?: number;
-};
-
-type CreateParams = {
-  name: string;
-  description?: string;
-  dueDay?: number;
-};
+import {
+  Bill,
+  CreateParams,
+  DeleteOneParams,
+  GetListParams,
+  GetOneParams,
+  UpdateParams,
+} from "./BillTypes";
 
 const getOne = ({ billId }: GetOneParams) =>
-  Api.get({ path: `bills/${billId}` });
+  Api.get<Bill>({ path: `bills/${billId}` });
 
 const getList = (
   { orderBy, orderByDirection }: GetListParams,
@@ -37,7 +19,7 @@ const getList = (
   if (orderBy) Object.assign(queryParams, { orderBy });
   if (orderByDirection) Object.assign(queryParams, { orderByDirection });
 
-  return Api.get({
+  return Api.get<Bill[]>({
     path: "bills",
     queryParams,
     token,
