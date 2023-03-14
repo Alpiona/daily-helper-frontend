@@ -1,5 +1,7 @@
+import { tokenState } from "@/atoms/tokenAtom";
 import BillModal from "@/components/Modal/Bill/BillModal";
 import { BillService } from "@/services/BillService";
+import { Bill } from "@/services/BillTypes";
 import {
   Box,
   Button,
@@ -15,21 +17,34 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
-import { GetServerSideProps } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { useRecoilState } from "recoil";
 
-type Bill = {
-  name: string;
-  due_day: number;
-  paidAt?: Date;
-};
-
-interface Props {
-  bills: Bill[];
-}
-
-const BillsPage: React.FC<Props> = ({ bills = [] }) => {
+const BillsPage: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [error, setError] = useState("");
+  const [bills, setBills] = useState<Bill[]>([]);
+  const [, setToken] = useRecoilState(tokenState);
+  const [cookies, , removeCookie] = useCookies(["token"]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data, errors } = await BillService.getList(
+        { orderBy: undefined, orderByDirection: undefined },
+        cookies.token
+      );
+
+      if (errors && errors[0]) {
+        const errorMessage = errors[0].message;
+        setError(errorMessage);
+      } else if (data) {
+        setBills(data);
+      }
+    };
+
+    fetchData().catch(() => setError("Error unexpected, try again later"));
+  }, [cookies.token]);
 
   return (
     <>
@@ -58,7 +73,11 @@ const BillsPage: React.FC<Props> = ({ bills = [] }) => {
                 <Tr key={b.name}>
                   <Td>{b.name}</Td>
                   <Td>{b.due_day}</Td>
-                  <Td>{b.paidAt ? format(b.paidAt, "dd/MM/yyyy") : "--"}</Td>
+                  <Td>
+                    {b.paid_at
+                      ? format(new Date(b.paid_at), "dd/MM/yyyy")
+                      : "--"}
+                  </Td>
                 </Tr>
               ))}
             </Tbody>
@@ -76,25 +95,6 @@ const BillsPage: React.FC<Props> = ({ bills = [] }) => {
       </Box>
     </>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const token = context.req.cookies["token"];
-
-  const res = await BillService.getList({}, token!);
-
-  console.log(res);
-
-  if (res.status === 401) {
-    context.res.setHeader(
-      "Set-Cookie",
-      "token=delete; Max-Age=0; HttpOnly=true; SameSite=Lax"
-    );
-  }
-
-  return {
-    props: { bills: res.data }, // will be passed to the page component as props
-  };
 };
 
 export default BillsPage;

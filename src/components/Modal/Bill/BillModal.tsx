@@ -43,8 +43,6 @@ const BillModal: React.FC<BillModalProps> = ({ handleClose, isOpenState }) => {
         cookies.token
       );
 
-      console.log(response);
-
       if (response.errors) {
         if (response.errors[0].message === "Access unauthorized") {
           removeCookie("token");

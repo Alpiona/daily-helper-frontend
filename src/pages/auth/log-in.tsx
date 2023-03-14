@@ -1,8 +1,10 @@
+import { tokenState } from "@/atoms/tokenAtom";
 import { UserService } from "@/services/UserService";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
+import { useRecoilState } from "recoil";
 
 type LoginProps = {};
 
@@ -13,7 +15,8 @@ const Login: React.FC<LoginProps> = () => {
   });
   const [error, setError] = useState("");
   const router = useRouter();
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [, setToken] = useRecoilState(tokenState);
+  const [, setCookie] = useCookies(["token"]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -25,11 +28,12 @@ const Login: React.FC<LoginProps> = () => {
         password: loginForm.password,
       });
 
-      if (errors) {
+      if (errors && errors[0]) {
         const errorMessage = errors[0].message;
         setError(errorMessage);
       } else if (data) {
         setCookie("token", data.token, { path: "/" });
+        setToken(data.token);
         router.push("/home");
       }
     } catch (err) {

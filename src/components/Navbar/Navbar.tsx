@@ -1,14 +1,10 @@
-import { userState } from "@/atoms/userAtom";
 import { Flex, Icon } from "@chakra-ui/react";
 import { ScriptProps } from "next/script";
 import React from "react";
 import { IoImageOutline } from "react-icons/io5";
-import { useRecoilState } from "recoil";
 import UserSpace from "./UserSpace";
 
 const Navbar: React.FC<ScriptProps> = () => {
-  const [user, setUser] = useRecoilState(userState);
-
   return (
     <Flex
       padding="6px 12px"
@@ -24,7 +20,7 @@ const Navbar: React.FC<ScriptProps> = () => {
         color="black"
         cursor="pointer"
       />
-      <UserSpace user={user} />
+      <UserSpace user={undefined} />
     </Flex>
   );
 };

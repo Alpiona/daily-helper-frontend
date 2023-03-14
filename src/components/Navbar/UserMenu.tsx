@@ -1,5 +1,4 @@
-import { userState, UserState } from "@/atoms/userAtom";
-import { UpdateApiAuth } from "@/providers/Api";
+import { tokenState } from "@/atoms/tokenAtom";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Flex,
@@ -11,22 +10,20 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
+import { useCookies } from "react-cookie";
 import { FaRedditSquare } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { MdOutlineLogin } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
 import { useResetRecoilState } from "recoil";
 
-type UserMenuProps = {
-  user?: UserState | null;
-};
-
-const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
-  const resetUser = useResetRecoilState(userState);
+const UserMenu: React.FC = () => {
+  const resetToken = useResetRecoilState(tokenState);
+  const [cookies, , removeCookie] = useCookies(["token"]);
 
   const logout = async () => {
-    resetUser();
-    UpdateApiAuth();
+    resetToken();
+    removeCookie("token");
   };
 
   return (
@@ -39,7 +36,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
       >
         <Flex align="center">
           <Flex align="center">
-            {user ? (
+            {cookies.token ? (
               <>
                 <Icon
                   fontSize={24}
@@ -54,7 +51,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                   align="flex-start"
                   mr={8}
                 >
-                  <Text fontWeight={700}>{user.email?.split("@")[0]}</Text>
+                  <Text fontWeight={700}>{cookies.token?.split("@")[0]}</Text>
                   <Flex>
                     <Icon as={IoSparkles} color="brand.100" mr={1} />
                     <Text color="gray.400">1 karma</Text>
@@ -69,7 +66,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
         </Flex>
       </MenuButton>
       <MenuList>
-        {user ? (
+        {cookies.token ? (
           <>
             <MenuItem>
               <Flex

@@ -1,4 +1,4 @@
-import { Api } from "@/providers/Api";
+import { Api } from "@/utils/Api";
 import {
   Bill,
   CreateParams,

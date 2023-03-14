@@ -15,7 +15,11 @@ const prepareResponse = (fetcher: Promise<Response>) =>
   fetcher
     .then(async (response) =>
       response.json().then((data) => {
-        return { data, status: response.status, errors: data.errors || [] };
+        return {
+          data: data.data,
+          status: response.status,
+          errors: data.errors || [],
+        };
       })
     )
     .catch((err) => {
