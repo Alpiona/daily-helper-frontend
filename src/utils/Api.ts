@@ -66,11 +66,13 @@ const put = async <T>({
   path,
   queryParams,
   body,
+  token,
 }: RequestParams): Promise<BaseResponse<T>> => {
   const fetcher = fetch(`/api/${path}` + new URLSearchParams(queryParams), {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(body),
   });
@@ -80,11 +82,13 @@ const put = async <T>({
 
 const deleteOne = async <T>({
   path,
+  token,
 }: RequestParams): Promise<BaseResponse<T>> => {
   const fetcher = fetch(`/api/${path}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   });
 

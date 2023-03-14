@@ -8,8 +8,8 @@ import {
   UpdateParams,
 } from "./BillTypes";
 
-const getOne = ({ billId }: GetOneParams) =>
-  Api.get<Bill>({ path: `bills/${billId}` });
+const getOne = ({ billId }: GetOneParams, token: string) =>
+  Api.get<Bill>({ path: `bills/${billId}`, token });
 
 const getList = (
   { orderBy, orderByDirection }: GetListParams,
