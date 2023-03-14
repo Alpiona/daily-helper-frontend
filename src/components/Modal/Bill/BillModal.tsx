@@ -1,4 +1,5 @@
 import { BillService } from "@/services/BillService";
+import { Bill } from "@/services/BillTypes";
 import {
   Button,
   Flex,
@@ -17,10 +18,15 @@ import { useCookies } from "react-cookie";
 
 type BillModalProps = {
   handleClose: () => void;
+  handleNewBill: (newBill: Bill) => void;
   isOpenState: boolean;
 };
 
-const BillModal: React.FC<BillModalProps> = ({ handleClose, isOpenState }) => {
+const BillModal: React.FC<BillModalProps> = ({
+  handleClose,
+  isOpenState,
+  handleNewBill,
+}) => {
   const [createBillForm, setCreateBillForm] = useState({
     name: "",
     description: "",
@@ -28,13 +34,13 @@ const BillModal: React.FC<BillModalProps> = ({ handleClose, isOpenState }) => {
   });
   const [error, setError] = useState("");
   const router = useRouter();
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [cookies, , removeCookie] = useCookies(["token"]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      const response = await BillService.create(
+      const { status, errors } = await BillService.create(
         {
           name: createBillForm.name,
           description: createBillForm.description,
@@ -43,17 +49,25 @@ const BillModal: React.FC<BillModalProps> = ({ handleClose, isOpenState }) => {
         cookies.token
       );
 
-      if (response.errors) {
-        if (response.errors[0].message === "Access unauthorized") {
+      if (errors && errors[0]) {
+        if (status === 401) {
           removeCookie("token");
           router.push("/auth/log-in");
         } else {
-          setError(response.errors[0].message);
+          setError(errors[0].message);
         }
+      } else {
+        handleNewBill({
+          name: createBillForm.name,
+          description: createBillForm.description,
+          due_day: createBillForm.dueDay,
+        });
       }
     } catch (err) {
       console.log(err);
     }
+
+    handleClose();
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

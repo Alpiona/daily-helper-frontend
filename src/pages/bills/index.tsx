@@ -28,6 +28,10 @@ const BillsPage: React.FC = () => {
   const [, setToken] = useRecoilState(tokenState);
   const [cookies, , removeCookie] = useCookies(["token"]);
 
+  const onNewBill = (newBill: Bill) => {
+    setBills([...bills, newBill]);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const { data, errors } = await BillService.getList(
@@ -51,6 +55,7 @@ const BillsPage: React.FC = () => {
       <BillModal
         handleClose={() => setIsOpenModal(false)}
         isOpenState={isOpenModal}
+        handleNewBill={onNewBill}
       />
       <Box marginX="auto" marginTop="30pt" bg="white" width="50%">
         <Flex justifyContent="center" margin={3}>
