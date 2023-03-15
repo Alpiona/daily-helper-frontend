@@ -15,6 +15,7 @@ const prepareResponse = (fetcher: Promise<Response>) =>
   fetcher
     .then(async (response) =>
       response.json().then((data) => {
+        console.log(data);
         return {
           data: data.data,
           status: response.status,

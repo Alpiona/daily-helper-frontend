@@ -1,4 +1,5 @@
 export type Bill = {
+  id: string;
   name: string;
   description: string;
   due_day?: number;

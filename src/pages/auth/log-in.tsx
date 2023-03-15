@@ -1,14 +1,13 @@
 import { tokenState } from "@/atoms/tokenAtom";
 import { UserService } from "@/services/UserService";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import { default as NextLink } from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useRecoilState } from "recoil";
 
-type LoginProps = {};
-
-const Login: React.FC<LoginProps> = () => {
+const Login: React.FC = () => {
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
@@ -124,10 +123,11 @@ const Login: React.FC<LoginProps> = () => {
           <Flex fontSize="9pt" justifyContent="center">
             <Text mr={1}>New here?</Text>
             <Text
+              as={NextLink}
+              href="/auth/sign-up"
               color="blue.500"
               fontWeight={700}
               cursor="pointer"
-              onClick={() => {}}
             >
               Sign Up
             </Text>

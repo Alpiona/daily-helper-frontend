@@ -17,6 +17,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
+import { default as NextLink } from "next/link";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useRecoilState } from "recoil";
@@ -34,7 +35,7 @@ const BillsPage: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data, errors } = await BillService.getList(
+      const { data, errors, status } = await BillService.getList(
         { orderBy: undefined, orderByDirection: undefined },
         cookies.token
       );
@@ -45,10 +46,14 @@ const BillsPage: React.FC = () => {
       } else if (data) {
         setBills(data);
       }
+
+      if (status === 401) {
+        removeCookie("token");
+      }
     };
 
     fetchData().catch(() => setError("Error unexpected, try again later"));
-  }, [cookies.token]);
+  }, [cookies.token, removeCookie]);
 
   return (
     <>
@@ -75,8 +80,12 @@ const BillsPage: React.FC = () => {
             </Thead>
             <Tbody>
               {bills.map((b) => (
-                <Tr key={b.name}>
-                  <Td>{b.name}</Td>
+                <Tr key={b.id}>
+                  <Td>
+                    <Text as={NextLink} href={`/bills/${b.id}`}>
+                      {b.name}
+                    </Text>
+                  </Td>
                   <Td>{b.due_day}</Td>
                   <Td>
                     {b.paid_at

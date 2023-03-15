@@ -23,10 +23,11 @@ const BillDetails: React.FC = () => {
   const [error, setError] = useState("");
   const [cookies, , removeCookie] = useCookies(["token"]);
   const router = useRouter();
-  const billId = router.query;
+  const billId = router.query.id;
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log(billId);
       const { data, errors } = await BillService.getOne(
         { billId: String(billId) },
         cookies.token
@@ -57,14 +58,23 @@ const BillDetails: React.FC = () => {
           </Text>
         </Flex>
         <Divider />
-        <Flex justifyContent="center" margin={3}>
-          <Flex>
+        {bill && (
+          <Flex justifyContent="center" margin={3}>
             <Text>
               <b>Name:</b>
             </Text>
-            <Text>André</Text>
+            <Text>{bill.name}</Text>
+            <Text>
+              <b>Description:</b>
+            </Text>
+            <Text>{bill.description}</Text>
+            <Text>
+              <b>Due Day:</b>
+            </Text>
+            <Text>{bill.due_day}</Text>
           </Flex>
-        </Flex>
+        )}
+
         <Divider />
         <TableContainer margin={4} borderRadius={3}>
           <Table size="sm">

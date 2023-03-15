@@ -1,5 +1,6 @@
 import { UserService } from "@/services/UserService";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import { default as NextLink } from "next/link";
 import React, { useState } from "react";
 
 const SignUp: React.FC = () => {
@@ -124,10 +125,11 @@ const SignUp: React.FC = () => {
           <Flex fontSize="9pt" justifyContent="center">
             <Text mr={1}>Already registered?</Text>
             <Text
+              as={NextLink}
+              href="/auth/log-in"
               color="blue.500"
               fontWeight={700}
               cursor="pointer"
-              onClick={() => {}}
             >
               Log In
             </Text>
