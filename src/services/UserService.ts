@@ -7,7 +7,7 @@ type LogInParams = {
 
 type LogInData = {
   token: string;
-  expireIn: string;
+  expiresAt: string;
 };
 
 type SignUpUserParams = {

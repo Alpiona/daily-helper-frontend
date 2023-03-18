@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
     (request.nextUrl.pathname.includes("log-in") ||
       request.nextUrl.pathname.includes("sign-up"))
   ) {
-    return NextResponse.redirect(new URL("/home", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   if (
@@ -25,5 +25,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/home", "/auth/:path*", "/bills/:path*"],
+  matcher: ["/auth/:path*", "/bills/:path*"],
 };

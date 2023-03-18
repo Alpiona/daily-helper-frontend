@@ -2,8 +2,8 @@ export type Bill = {
   id: string;
   name: string;
   description: string;
-  due_day?: number;
-  paid_at?: string;
+  dueDay?: number;
+  paidAt?: string;
 };
 
 export type GetOneParams = {

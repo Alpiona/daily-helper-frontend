@@ -1,4 +1,3 @@
-import { tokenState } from "@/atoms/tokenAtom";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Flex,
@@ -15,14 +14,11 @@ import { FaRedditSquare } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { MdOutlineLogin } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
-import { useResetRecoilState } from "recoil";
 
 const UserMenu: React.FC = () => {
-  const resetToken = useResetRecoilState(tokenState);
   const [cookies, , removeCookie] = useCookies(["token"]);
 
   const logout = async () => {
-    resetToken();
     removeCookie("token");
   };
 

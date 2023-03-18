@@ -8,12 +8,12 @@ const AuthButtons: React.FC<AuthButtonsProps> = () => {
   return (
     <>
       <Flex align="center">
-        <Link as={NextLink} href="/login">
+        <Link as={NextLink} href="/auth/log-in">
           <Button size="sm" mr={2}>
             Log In
           </Button>
         </Link>
-        <Link as={NextLink} href="/sign-up">
+        <Link as={NextLink} href="/auth/sign-up">
           <Button size="sm">Sign Up</Button>
         </Link>
       </Flex>

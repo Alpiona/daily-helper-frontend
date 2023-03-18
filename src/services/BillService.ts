@@ -35,7 +35,7 @@ const update = (
 ) => Api.put({ path: `bills/${billId}`, body: { name, description, dueDay } });
 
 const create = (data: CreateParams, token: string) =>
-  Api.post({ path: "bills", body: data, token });
+  Api.post<Bill>({ path: "bills", body: data, token });
 
 export const BillService = {
   getOne,
