@@ -1,8 +1,8 @@
 export type Payment = {
   id: string;
   value: number | null;
-  reference_date: Date;
-  paid_at: Date;
+  referenceDate: Date;
+  paidAt: Date;
 };
 
 export type GetOneParams = {

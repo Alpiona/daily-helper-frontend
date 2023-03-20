@@ -94,7 +94,7 @@ const BillDetails: React.FC = () => {
               <Text>
                 <b>Due Day:</b>
               </Text>
-              <Text>{bill.due_day}</Text>
+              <Text>{bill.dueDay}</Text>
             </Flex>
           </Flex>
         )}
@@ -119,8 +119,8 @@ const BillDetails: React.FC = () => {
             <Tbody>
               {payments.map((p) => (
                 <Tr key={p.id}>
-                  <Td>{format(new Date(p.reference_date), "MM/yyyy")}</Td>
-                  <Td>{format(new Date(p.paid_at), "dd/MM/yyyy")}</Td>
+                  <Td>{format(new Date(p.referenceDate), "MM/yyyy")}</Td>
+                  <Td>{format(new Date(p.paidAt), "dd/MM/yyyy")}</Td>
                   <Td>{p.value}</Td>
                 </Tr>
               ))}

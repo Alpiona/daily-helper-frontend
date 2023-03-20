@@ -13,6 +13,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  console.log("chegou", request.nextUrl.pathname);
   if (
     !token &&
     !request.nextUrl.pathname.includes("log-in") &&
@@ -25,5 +26,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/auth/:path*", "/bills/:path*"],
+  matcher: ["/", "/auth/:path*", "/bills/:path*"],
 };
