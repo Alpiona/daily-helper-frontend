@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout/Layout";
+import BaseModal from "@/components/Modal/BaseModal";
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import { RecoilRoot } from "recoil";
@@ -9,6 +10,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <RecoilRoot>
       <ChakraProvider theme={theme}>
         <Layout>
+          <BaseModal />
           <Component {...pageProps} />
         </Layout>
       </ChakraProvider>

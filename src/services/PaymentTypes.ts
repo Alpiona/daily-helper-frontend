@@ -1,8 +1,9 @@
 export type Payment = {
   id: string;
-  value: number | null;
+  billId: string;
+  value?: number;
   referenceDate: Date;
-  paidAt: Date;
+  paidAt?: Date;
 };
 
 export type GetOneParams = {
@@ -22,4 +23,9 @@ export type UpdateParams = {
   paymentId: string;
 };
 
-export type CreateParams = {};
+export type CreateParams = {
+  billId: string;
+  value?: number;
+  referenceDate: Date;
+  paidAt?: Date;
+};

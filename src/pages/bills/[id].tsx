@@ -7,6 +7,7 @@ import {
   Button,
   Divider,
   Flex,
+  Icon,
   Table,
   TableContainer,
   Tbody,
@@ -20,6 +21,7 @@ import { format } from "date-fns";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { FiEdit, FiPlusSquare, FiTrash2 } from "react-icons/fi";
 
 type BillDetailsProps = {
   handleBillModal: () => void;
@@ -70,7 +72,7 @@ const BillDetails: React.FC = () => {
         isOpenState={isOpenModal}
         handleNewBill={onNewBill}
       /> */}
-      <Box marginX="auto" marginTop="30pt" bg="white" width="50%">
+      <Box marginX="auto" marginTop="30pt" bg="white" width="50%" padding={2}>
         <Flex justifyContent="center" margin={3}>
           <Text>
             <b>Bill Details</b>
@@ -99,6 +101,15 @@ const BillDetails: React.FC = () => {
           </Flex>
         )}
 
+        <Flex justifyContent="end">
+          <Button size="sm" marginX={3} marginBottom={3} onClick={() => {}}>
+            <Icon as={FiEdit} color="black" />
+          </Button>
+          <Button size="sm" marginX={3} marginBottom={3} onClick={() => {}}>
+            <Icon as={FiTrash2} color="black" />
+          </Button>
+        </Flex>
+
         <Divider />
 
         <Flex justifyContent="center" marginTop={4}>
@@ -120,7 +131,9 @@ const BillDetails: React.FC = () => {
               {payments.map((p) => (
                 <Tr key={p.id}>
                   <Td>{format(new Date(p.referenceDate), "MM/yyyy")}</Td>
-                  <Td>{format(new Date(p.paidAt), "dd/MM/yyyy")}</Td>
+                  <Td>
+                    {p.paidAt ? format(new Date(p.paidAt), "dd/MM/yyyy") : "--"}
+                  </Td>
                   <Td>{p.value}</Td>
                 </Tr>
               ))}
@@ -128,8 +141,8 @@ const BillDetails: React.FC = () => {
           </Table>
         </TableContainer>
         <Flex justifyContent="end">
-          <Button marginX={3} marginBottom={3} onClick={() => {}}>
-            +
+          <Button size="sm" marginX={3} marginBottom={3} onClick={() => {}}>
+            <Icon as={FiPlusSquare} color="black" />
           </Button>
         </Flex>
       </Box>

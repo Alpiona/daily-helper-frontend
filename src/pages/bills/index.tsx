@@ -1,5 +1,4 @@
-import { billModalState } from "@/atoms/billModalAtom";
-import BillModal from "@/components/Modal/Bill/BillModal";
+import { modalState } from "@/atoms/modalAtom";
 import { BillService } from "@/services/BillService";
 import { Bill } from "@/services/BillTypes";
 import {
@@ -15,15 +14,15 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { format } from "date-fns";
 import { default as NextLink } from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 
 const BillsPage: React.FC = () => {
-  const [modalState, setModalState] = useRecoilState(billModalState);
+  const [modal, setModal] = useRecoilState(modalState);
+  const resetModal = useResetRecoilState(modalState);
   const [error, setError] = useState("");
   const router = useRouter();
   const [bills, setBills] = useState<Bill[]>([]);
@@ -42,14 +41,29 @@ const BillsPage: React.FC = () => {
       setError(fetchErrors[0].message);
     } else {
       setBills([...bills, { ...newBill, id: data.id }]);
-      setModalState((prev) => ({ ...prev, open: false }));
     }
+
+    resetModal();
   };
 
-  const handleEditBill = (editedBill: Bill) => {
-    const billIndex = bills.findIndex((b) => b.id === editedBill.id);
-    bills[billIndex] = editedBill;
-    setBills(bills);
+  const handleEditBill = async (updatedBill: Bill) => {
+    const {
+      data,
+      errors: fetchErrors,
+      status,
+    } = await BillService.update(updatedBill, cookies.token);
+    if (status === 401) {
+      removeCookie("token");
+      router.push("/auth/log-in");
+    } else if (fetchErrors && fetchErrors.length > 0) {
+      setError(fetchErrors[0].message);
+    } else {
+      const billIndex = bills.findIndex((b) => b.id === updatedBill.id);
+      bills[billIndex] = updatedBill;
+      setBills(bills);
+    }
+
+    resetModal();
   };
 
   useEffect(() => {
@@ -77,10 +91,6 @@ const BillsPage: React.FC = () => {
 
   return (
     <>
-      <BillModal
-        handleCreateBill={handleCreateBill}
-        handleEditBill={handleEditBill}
-      />
       <Box marginX="auto" marginTop="30pt" bg="white" width="50%">
         <Flex justifyContent="center" margin={3}>
           <Text>
@@ -105,9 +115,7 @@ const BillsPage: React.FC = () => {
                     </Text>
                   </Td>
                   <Td>{b.dueDay}</Td>
-                  <Td>
-                    {b.paidAt ? format(new Date(b.paidAt), "dd/MM/yyyy") : "--"}
-                  </Td>
+                  <Td>{b.monthPaid}</Td>
                 </Tr>
               ))}
             </Tbody>
@@ -118,9 +126,10 @@ const BillsPage: React.FC = () => {
             marginX={3}
             marginBottom={3}
             onClick={() =>
-              setModalState((prev) => ({
+              setModal((prev) => ({
                 ...prev,
                 open: true,
+                handleAction: handleCreateBill,
                 view: "createBill",
               }))
             }

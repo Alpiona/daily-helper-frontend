@@ -30,9 +30,9 @@ const deleteOne = ({ billId }: DeleteOneParams, token: string) =>
   Api.deleteOne({ path: `bills/${billId}` });
 
 const update = (
-  { billId, name, description, dueDay }: UpdateParams,
+  { id, name, description, dueDay }: UpdateParams,
   token: string
-) => Api.put({ path: `bills/${billId}`, body: { name, description, dueDay } });
+) => Api.put({ path: `bills/${id}`, body: { name, description, dueDay } });
 
 const create = (data: CreateParams, token: string) =>
   Api.post<Bill>({ path: "bills", body: data, token });

@@ -3,7 +3,7 @@ export type Bill = {
   name: string;
   description: string;
   dueDay?: number;
-  paidAt?: string;
+  monthPaid?: boolean;
 };
 
 export type GetOneParams = {
@@ -20,7 +20,7 @@ export type DeleteOneParams = {
 };
 
 export type UpdateParams = {
-  billId: string;
+  id: string;
   name: string;
   description?: string;
   dueDay?: number;

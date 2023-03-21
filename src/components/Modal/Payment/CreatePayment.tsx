@@ -1,37 +1,38 @@
-import { Bill } from "@/services/BillTypes";
+import { Payment } from "@/services/PaymentTypes";
 import { Button, Input, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 
-type EditBillProps = {
-  data: Bill;
-  handleEditBill: (bill: Bill) => void;
+type CreatePaymentProps = {
+  handleCreatePayment: (newPayment: Omit<Payment, "id">) => void;
+  billId: string;
 };
 
-const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
-  const [editBillForm, setEditBillForm] = useState({
-    name: data.name,
-    description: data.description,
-    dueDay: data.dueDay,
+const CreatePayment: React.FC<CreatePaymentProps> = ({
+  handleCreatePayment,
+  billId,
+}) => {
+  const [createPaymentForm, setCreatePaymentForm] = useState<
+    Omit<Payment, "id" | "billId">
+  >({
+    referenceDate: new Date(),
   });
   const [error, setError] = useState("");
-  const router = useRouter();
   const [cookies, , removeCookie] = useCookies(["token"]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    handleEditBill({
-      id: data.id,
-      name: editBillForm.name,
-      description: editBillForm.description,
-      dueDay: editBillForm.dueDay,
+    handleCreatePayment({
+      billId,
+      value: createPaymentForm.value,
+      referenceDate: createPaymentForm.referenceDate,
+      paidAt: createPaymentForm.paidAt,
     });
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEditBillForm((prev) => ({
+    setCreatePaymentForm((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
@@ -39,12 +40,12 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
 
   return (
     <>
-      <form onSubmit={onSubmit} style={{ width: "100%" }}>
+      <form onSubmit={onSubmit}>
         <Input
           required
-          name="name"
-          placeholder="name"
-          type="text"
+          name="paidAt"
+          placeholder="paid at"
+          type="date"
           mb={2}
           onChange={onChange}
           fontSize="10pt"
@@ -64,9 +65,9 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
         />
         <Input
           required
-          name="description"
-          placeholder="description"
-          type="text"
+          name="referenceDate"
+          placeholder="reference date"
+          type="date"
           mb={2}
           onChange={onChange}
           fontSize="10pt"
@@ -85,8 +86,8 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
           bg="gray.50"
         />
         <Input
-          name="dueDay"
-          placeholder="due day"
+          name="value"
+          placeholder="value"
           type="number"
           min="1"
           max="31"
@@ -118,4 +119,4 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
   );
 };
 
-export default EditBill;
+export default CreatePayment;
