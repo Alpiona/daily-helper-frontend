@@ -29,12 +29,11 @@ const BillsPage: React.FC = () => {
   const [cookies, , removeCookie] = useCookies(["token"]);
 
   const handleCreateBill = async (newBill: Omit<Bill, "id">) => {
-    const {
-      data,
-      errors: fetchErrors,
-      status,
-    } = await BillService.create(newBill, cookies.token);
-    if (status === 401) {
+    const { data, errors: fetchErrors } = await BillService.create(
+      newBill,
+      cookies.token
+    );
+    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
       removeCookie("token");
       router.push("/auth/log-in");
     } else if (fetchErrors && fetchErrors.length > 0) {
@@ -46,41 +45,21 @@ const BillsPage: React.FC = () => {
     resetModal();
   };
 
-  const handleEditBill = async (updatedBill: Bill) => {
-    const {
-      data,
-      errors: fetchErrors,
-      status,
-    } = await BillService.update(updatedBill, cookies.token);
-    if (status === 401) {
-      removeCookie("token");
-      router.push("/auth/log-in");
-    } else if (fetchErrors && fetchErrors.length > 0) {
-      setError(fetchErrors[0].message);
-    } else {
-      const billIndex = bills.findIndex((b) => b.id === updatedBill.id);
-      bills[billIndex] = updatedBill;
-      setBills(bills);
-    }
-
-    resetModal();
-  };
-
   useEffect(() => {
     const fetchData = async () => {
-      const { data, errors, status } = await BillService.getList(
+      const { data, errors: fetchErrors } = await BillService.getList(
         { orderBy: undefined, orderByDirection: undefined },
         cookies.token
       );
 
-      if (errors && errors[0]) {
-        const errorMessage = errors[0].message;
+      if (fetchErrors && fetchErrors[0]) {
+        const errorMessage = fetchErrors[0].message;
         setError(errorMessage);
       } else if (data) {
         setBills(data);
       }
 
-      if (status === 401) {
+      if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
         removeCookie("token");
         router.push("/auth/log-in");
       }

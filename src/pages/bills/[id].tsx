@@ -1,3 +1,4 @@
+import { modalState } from "@/atoms/modalAtom";
 import { BillService } from "@/services/BillService";
 import { Bill } from "@/services/BillTypes";
 import { PaymentService } from "@/services/PaymentService";
@@ -22,18 +23,67 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FiEdit, FiPlusSquare, FiTrash2 } from "react-icons/fi";
-
-type BillDetailsProps = {
-  handleBillModal: () => void;
-};
+import { useRecoilState, useResetRecoilState } from "recoil";
 
 const BillDetails: React.FC = () => {
+  const [modal, setModal] = useRecoilState(modalState);
+  const resetModal = useResetRecoilState(modalState);
   const [bill, setBill] = useState<Bill>();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [error, setError] = useState("");
   const [cookies, , removeCookie] = useCookies(["token"]);
   const router = useRouter();
   const billId = router.query.id;
+
+  const handleEditBill = async (updatedBill: Bill) => {
+    const { errors: fetchErrors } = await BillService.update(
+      updatedBill,
+      cookies.token
+    );
+
+    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
+      removeCookie("token");
+      router.push("/auth/log-in");
+    } else if (fetchErrors && fetchErrors.length > 0) {
+      setError(fetchErrors[0].message);
+    } else {
+      setBill(updatedBill);
+    }
+
+    resetModal();
+  };
+
+  const handleDeleteBill = async (billId: string) => {
+    const { errors: fetchErrors } = await BillService.deleteOne(
+      { billId },
+      cookies.token
+    );
+
+    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
+      removeCookie("token");
+      router.push("/auth/log-in");
+    } else if (fetchErrors && fetchErrors.length > 0) {
+      setError(fetchErrors[0].message);
+    }
+
+    router.push("/bills");
+  };
+
+  const handleCreatePayment = async (newPayment: Payment) => {
+    const { errors: fetchErrors } = await PaymentService.create(
+      newPayment,
+      cookies.token
+    );
+
+    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
+      removeCookie("token");
+      router.push("/auth/log-in");
+    } else if (fetchErrors && fetchErrors.length > 0) {
+      setError(fetchErrors[0].message);
+    }
+
+    setPayments([...payments, newPayment]);
+  };
 
   useEffect(() => {
     const fetchBillData = async () => {
@@ -67,11 +117,6 @@ const BillDetails: React.FC = () => {
 
   return (
     <>
-      {/* <BillModal
-        handleClose={() => setIsOpenModal(false)}
-        isOpenState={isOpenModal}
-        handleNewBill={onNewBill}
-      /> */}
       <Box marginX="auto" marginTop="30pt" bg="white" width="50%" padding={2}>
         <Flex justifyContent="center" margin={3}>
           <Text>
@@ -102,10 +147,28 @@ const BillDetails: React.FC = () => {
         )}
 
         <Flex justifyContent="end">
-          <Button size="sm" marginX={3} marginBottom={3} onClick={() => {}}>
+          <Button
+            size="sm"
+            marginX={3}
+            marginBottom={3}
+            onClick={() =>
+              setModal((prev) => ({
+                ...prev,
+                open: true,
+                handleAction: handleEditBill,
+                data: bill,
+                view: "editBill",
+              }))
+            }
+          >
             <Icon as={FiEdit} color="black" />
           </Button>
-          <Button size="sm" marginX={3} marginBottom={3} onClick={() => {}}>
+          <Button
+            size="sm"
+            marginX={3}
+            marginBottom={3}
+            onClick={() => handleDeleteBill(bill?.id!)}
+          >
             <Icon as={FiTrash2} color="black" />
           </Button>
         </Flex>

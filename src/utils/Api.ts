@@ -7,24 +7,28 @@ type RequestParams = {
 
 type BaseResponse<T = {}> = {
   errors?: Array<{ message: string }>;
-  status: number;
   data: T;
 };
 
-const prepareResponse = (fetcher: Promise<Response>) =>
-  fetcher
-    .then(async (response) =>
-      response.json().then((data) => {
-        return {
-          data: data.data,
-          status: response.status,
-          errors: data.errors || [],
-        };
-      })
-    )
-    .catch((err) => {
-      throw new Error(err);
-    });
+const prepareResponse = async (fetcher: Promise<Response>) => {
+  try {
+    const response = await fetcher;
+
+    if (response.status === 204) {
+      return { data: {}, errors: undefined };
+    }
+
+    const data = await response.json();
+
+    return {
+      data: data.data || {},
+      errors: data.errors,
+    };
+  } catch (err: any) {
+    console.log("ERROR", err);
+    throw new Error(err);
+  }
+};
 
 const get = async <T>({
   path,
@@ -64,19 +68,20 @@ const post = async <T>({
 
 const put = async <T>({
   path,
-  queryParams,
   body,
   token,
 }: RequestParams): Promise<BaseResponse<T>> => {
-  const fetcher = fetch(`/api/${path}` + new URLSearchParams(queryParams), {
+  const fetcher = fetch(`/api/${path}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(body),
+    credentials: "include",
   });
 
+  console.log("CHEGOU", path);
   return await prepareResponse(fetcher);
 };
 

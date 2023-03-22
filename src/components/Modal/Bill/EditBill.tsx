@@ -1,8 +1,6 @@
 import { Bill } from "@/services/BillTypes";
 import { Button, Input, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useCookies } from "react-cookie";
 
 type EditBillProps = {
   data: Bill;
@@ -16,8 +14,6 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
     dueDay: data.dueDay,
   });
   const [error, setError] = useState("");
-  const router = useRouter();
-  const [cookies, , removeCookie] = useCookies(["token"]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -45,6 +41,7 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
           name="name"
           placeholder="name"
           type="text"
+          defaultValue={data.name}
           mb={2}
           onChange={onChange}
           fontSize="10pt"
@@ -67,6 +64,7 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
           name="description"
           placeholder="description"
           type="text"
+          defaultValue={data.description}
           mb={2}
           onChange={onChange}
           fontSize="10pt"
@@ -90,6 +88,7 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
           type="number"
           min="1"
           max="31"
+          defaultValue={data.dueDay}
           mb={2}
           onChange={onChange}
           fontSize="10pt"
@@ -111,7 +110,7 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
           {error}
         </Text>
         <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-          Create Bill
+          Edit Bill
         </Button>
       </form>
     </>
