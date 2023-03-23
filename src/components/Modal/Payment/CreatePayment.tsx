@@ -1,16 +1,23 @@
 import { Payment } from "@/services/PaymentTypes";
-import { Button, Input, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Input,
+  InputGroup,
+  InputLeftAddon,
+  Text,
+} from "@chakra-ui/react";
+import { format } from "date-fns";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 
 type CreatePaymentProps = {
   handleCreatePayment: (newPayment: Omit<Payment, "id">) => void;
-  billId: string;
+  data: { billId: string };
 };
 
 const CreatePayment: React.FC<CreatePaymentProps> = ({
   handleCreatePayment,
-  billId,
+  data: { billId },
 }) => {
   const [createPaymentForm, setCreatePaymentForm] = useState<
     Omit<Payment, "id" | "billId">
@@ -19,6 +26,8 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({
   });
   const [error, setError] = useState("");
   const [cookies, , removeCookie] = useCookies(["token"]);
+
+  const actualMonthYear = format(new Date(), "yyyy-MM");
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,56 +50,72 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({
   return (
     <>
       <form onSubmit={onSubmit}>
-        <Input
-          required
-          name="paidAt"
-          placeholder="paid at"
-          type="date"
-          mb={2}
-          onChange={onChange}
-          fontSize="10pt"
-          _placeholder={{ color: "gray.500" }}
-          _hover={{
-            bg: "white",
-            border: "1px solid",
-            borderColor: "blue.500",
-          }}
-          _focus={{
-            outline: "none",
-            bg: "white",
-            border: "1px solid",
-            borderColor: "blue.500",
-          }}
-          bg="gray.50"
-        />
-        <Input
-          required
-          name="referenceDate"
-          placeholder="reference date"
-          type="date"
-          mb={2}
-          onChange={onChange}
-          fontSize="10pt"
-          _placeholder={{ color: "gray.500" }}
-          _hover={{
-            bg: "white",
-            border: "1px solid",
-            borderColor: "blue.500",
-          }}
-          _focus={{
-            outline: "none",
-            bg: "white",
-            border: "1px solid",
-            borderColor: "blue.500",
-          }}
-          bg="gray.50"
-        />
+        <InputGroup>
+          <InputLeftAddon>
+            <Text fontSize={15}>
+              <b>Paid At</b>
+            </Text>
+          </InputLeftAddon>
+          <Input
+            name="paidAt"
+            placeholder="paid at"
+            type="date"
+            mb={2}
+            onChange={onChange}
+            fontSize="10pt"
+            _placeholder={{ color: "gray.500" }}
+            _hover={{
+              bg: "white",
+              border: "1px solid",
+              borderColor: "blue.500",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "white",
+              border: "1px solid",
+              borderColor: "blue.500",
+            }}
+            bg="gray.50"
+          />
+        </InputGroup>
+        <InputGroup>
+          <InputLeftAddon>
+            <Text fontSize={15}>
+              <b>Reference Month</b>
+            </Text>
+          </InputLeftAddon>
+          <Input
+            required
+            defaultValue={actualMonthYear}
+            name="referenceDate"
+            placeholder="reference date"
+            type="month"
+            mb={2}
+            onChange={onChange}
+            pattern="[0-9]{4}-[0-9]{2}"
+            fontSize="10pt"
+            _placeholder={{ color: "gray.500" }}
+            _hover={{
+              bg: "white",
+              border: "1px solid",
+              borderColor: "blue.500",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "white",
+              border: "1px solid",
+              borderColor: "blue.500",
+            }}
+            bg="gray.50"
+          />
+        </InputGroup>
         <Input
           name="value"
           placeholder="value"
           type="number"
-          min="1"
-          max="31"
+          min="0.00"
+          max="10000.00"
+          step="0.01"
           mb={2}
           onChange={onChange}
           fontSize="10pt"
@@ -112,7 +137,7 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({
           {error}
         </Text>
         <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-          Create Bill
+          Create Payment
         </Button>
       </form>
     </>

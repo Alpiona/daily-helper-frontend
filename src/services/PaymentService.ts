@@ -12,10 +12,10 @@ const getOne = ({ paymentId }: GetOneParams, token: string) =>
   Api.get<Payment>({ path: `payments/${paymentId}`, token });
 
 const getList = (
-  { orderBy, orderByDirection }: GetListParams,
+  { billId, orderBy, orderByDirection }: GetListParams,
   token: string
 ) => {
-  const queryParams = {};
+  const queryParams = { billId };
   if (orderBy) Object.assign(queryParams, { orderBy });
   if (orderByDirection) Object.assign(queryParams, { orderByDirection });
 
@@ -37,7 +37,7 @@ const update = ({ paymentId }: UpdateParams, token: string) =>
   });
 
 const create = (data: CreateParams, token: string) =>
-  Api.post({ path: "payments", body: data, token });
+  Api.post<Payment>({ path: "payments", body: data, token });
 
 export const PaymentService = {
   getOne,

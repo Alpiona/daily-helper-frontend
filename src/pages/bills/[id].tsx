@@ -70,10 +70,12 @@ const BillDetails: React.FC = () => {
   };
 
   const handleCreatePayment = async (newPayment: Payment) => {
-    const { errors: fetchErrors } = await PaymentService.create(
+    const { data, errors: fetchErrors } = await PaymentService.create(
       newPayment,
       cookies.token
     );
+
+    console.log(data, payments[0]);
 
     if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
       removeCookie("token");
@@ -82,7 +84,13 @@ const BillDetails: React.FC = () => {
       setError(fetchErrors[0].message);
     }
 
-    setPayments([...payments, newPayment]);
+    const updatedPayments = [...payments, data].sort(
+      (a, b) => Date.parse(b.referenceDate) - Date.parse(a.referenceDate)
+    );
+
+    setPayments(updatedPayments);
+
+    resetModal();
   };
 
   useEffect(() => {
@@ -101,7 +109,10 @@ const BillDetails: React.FC = () => {
     };
 
     const fetchPaymentsData = async () => {
-      const { data, errors } = await PaymentService.getList({}, cookies.token);
+      const { data, errors } = await PaymentService.getList(
+        { billId: String(billId) },
+        cookies.token
+      );
 
       if (errors && errors[0]) {
         const errorMessage = errors[0].message;
@@ -188,6 +199,7 @@ const BillDetails: React.FC = () => {
                 <Th>Reference Date</Th>
                 <Th>Paid At</Th>
                 <Th>Value</Th>
+                <Th width="15%"></Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -197,14 +209,44 @@ const BillDetails: React.FC = () => {
                   <Td>
                     {p.paidAt ? format(new Date(p.paidAt), "dd/MM/yyyy") : "--"}
                   </Td>
-                  <Td>{p.value}</Td>
+                  <Td>{p.value?.toFixed(2)}</Td>
+                  <Td>
+                    <Flex align="center">
+                      <Button
+                        size="xs"
+                        onClick={() => handleDeleteBill(bill?.id!)}
+                        marginRight={3}
+                      >
+                        <Icon as={FiEdit} color="black" />
+                      </Button>
+                      <Button
+                        size="xs"
+                        onClick={() => handleDeleteBill(bill?.id!)}
+                      >
+                        <Icon as={FiTrash2} color="black" />
+                      </Button>
+                    </Flex>
+                  </Td>
                 </Tr>
               ))}
             </Tbody>
           </Table>
         </TableContainer>
         <Flex justifyContent="end">
-          <Button size="sm" marginX={3} marginBottom={3} onClick={() => {}}>
+          <Button
+            size="sm"
+            marginX={3}
+            marginBottom={3}
+            onClick={() =>
+              setModal((prev) => ({
+                ...prev,
+                open: true,
+                handleAction: handleCreatePayment,
+                data: { billId: bill?.id },
+                view: "createPayment",
+              }))
+            }
+          >
             <Icon as={FiPlusSquare} color="black" />
           </Button>
         </Flex>

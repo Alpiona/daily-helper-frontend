@@ -2,8 +2,8 @@ export type Payment = {
   id: string;
   billId: string;
   value?: number;
-  referenceDate: Date;
-  paidAt?: Date;
+  referenceDate: string;
+  paidAt?: string;
 };
 
 export type GetOneParams = {
@@ -11,6 +11,7 @@ export type GetOneParams = {
 };
 
 export type GetListParams = {
+  billId: string;
   orderBy?: string;
   orderByDirection?: "asc" | "desc";
 };
@@ -26,6 +27,6 @@ export type UpdateParams = {
 export type CreateParams = {
   billId: string;
   value?: number;
-  referenceDate: Date;
-  paidAt?: Date;
+  referenceDate: string;
+  paidAt?: string;
 };

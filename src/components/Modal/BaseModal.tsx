@@ -12,6 +12,7 @@ import React from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import CreateBill from "./Bill/CreateBill";
 import EditBill from "./Bill/EditBill";
+import CreatePayment from "./Payment/CreatePayment";
 
 const BaseModal: React.FC = () => {
   const [modal] = useRecoilState(modalState);
@@ -52,6 +53,12 @@ const BaseModal: React.FC = () => {
               {modal.view === "editBill" && (
                 <EditBill
                   handleEditBill={modal.handleAction}
+                  data={modal.data}
+                />
+              )}
+              {modal.view === "createPayment" && (
+                <CreatePayment
+                  handleCreatePayment={modal.handleAction}
                   data={modal.data}
                 />
               )}
