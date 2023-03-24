@@ -11,7 +11,8 @@ export type ModalView =
   | "createBill"
   | "editBill"
   | "createPayment"
-  | "editPayment";
+  | "editPayment"
+  | "deletePayment";
 
 const defaultModalState: ModalState = {
   handleAction: () => {},

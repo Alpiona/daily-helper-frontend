@@ -13,6 +13,8 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import CreateBill from "./Bill/CreateBill";
 import EditBill from "./Bill/EditBill";
 import CreatePayment from "./Payment/CreatePayment";
+import DeletePayment from "./Payment/DeletePayment";
+import EditPayment from "./Payment/EditPayment";
 
 const BaseModal: React.FC = () => {
   const [modal] = useRecoilState(modalState);
@@ -32,6 +34,7 @@ const BaseModal: React.FC = () => {
             {modal.view === "editBill" && "Edit Bill"}
             {modal.view === "createPayment" && "Create Payment"}
             {modal.view === "editPayment" && "Edit Payment"}
+            {modal.view === "deletePayment" && "Delete Payment"}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody
@@ -59,6 +62,18 @@ const BaseModal: React.FC = () => {
               {modal.view === "createPayment" && (
                 <CreatePayment
                   handleCreatePayment={modal.handleAction}
+                  data={modal.data}
+                />
+              )}
+              {modal.view === "editPayment" && (
+                <EditPayment
+                  handleEditPayment={modal.handleAction}
+                  data={modal.data}
+                />
+              )}
+              {modal.view === "deletePayment" && (
+                <DeletePayment
+                  handleDeletePayment={modal.handleAction}
                   data={modal.data}
                 />
               )}

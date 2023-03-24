@@ -22,7 +22,7 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({
   const [createPaymentForm, setCreatePaymentForm] = useState<
     Omit<Payment, "id" | "billId">
   >({
-    referenceDate: new Date(),
+    referenceDate: new Date().toISOString(),
   });
   const [error, setError] = useState("");
   const [cookies, , removeCookie] = useCookies(["token"]);

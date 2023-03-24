@@ -14,14 +14,11 @@ const prepareResponse = async (fetcher: Promise<Response>) => {
   try {
     const response = await fetcher;
 
-    console.log("STATUS", response.status);
-
     if (response.status === 204) {
       return { data: {}, errors: undefined };
     }
 
     const data = await response.json();
-    console.log("🚀 ~ file: Api.ts:24 ~ prepareResponse ~ data:", data);
 
     return {
       data: data.data || {},

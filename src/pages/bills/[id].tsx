@@ -75,8 +75,6 @@ const BillDetails: React.FC = () => {
       cookies.token
     );
 
-    console.log(data, payments[0]);
-
     if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
       removeCookie("token");
       router.push("/auth/log-in");
@@ -89,6 +87,49 @@ const BillDetails: React.FC = () => {
     );
 
     setPayments(updatedPayments);
+
+    resetModal();
+  };
+
+  const handleEditPayment = async (updatedPayment: Payment) => {
+    const { data, errors: fetchErrors } = await PaymentService.update(
+      updatedPayment,
+      cookies.token
+    );
+
+    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
+      removeCookie("token");
+      router.push("/auth/log-in");
+    } else if (fetchErrors && fetchErrors.length > 0) {
+      setError(fetchErrors[0].message);
+    } else {
+      const paymentIndex = payments.findIndex(
+        (p) => p.id === updatedPayment.id
+      );
+
+      const paymentsUpdated = payments;
+      paymentsUpdated[paymentIndex] = data;
+
+      setPayments(paymentsUpdated);
+    }
+
+    resetModal();
+  };
+
+  const handleDeletePayment = async (paymentId: string) => {
+    const { errors: fetchErrors } = await PaymentService.deleteOne(
+      { paymentId },
+      cookies.token
+    );
+
+    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
+      removeCookie("token");
+      router.push("/auth/log-in");
+    } else if (fetchErrors && fetchErrors.length > 0) {
+      setError(fetchErrors[0].message);
+    } else {
+      setPayments(payments.filter((p) => p.id !== paymentId));
+    }
 
     resetModal();
   };
@@ -203,25 +244,43 @@ const BillDetails: React.FC = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {payments.map((p) => (
-                <Tr key={p.id}>
-                  <Td>{format(new Date(p.referenceDate), "MM/yyyy")}</Td>
+              {payments.map((payment) => (
+                <Tr key={payment.id}>
+                  <Td>{format(new Date(payment.referenceDate), "MM/yyyy")}</Td>
                   <Td>
-                    {p.paidAt ? format(new Date(p.paidAt), "dd/MM/yyyy") : "--"}
+                    {payment.paidAt
+                      ? format(new Date(payment.paidAt), "dd/MM/yyyy")
+                      : "--"}
                   </Td>
-                  <Td>{p.value?.toFixed(2)}</Td>
+                  <Td>{payment.value || payment.value?.toFixed(2)}</Td>
                   <Td>
                     <Flex align="center">
                       <Button
                         size="xs"
-                        onClick={() => handleDeleteBill(bill?.id!)}
+                        onClick={() =>
+                          setModal((prev) => ({
+                            ...prev,
+                            open: true,
+                            handleAction: handleEditPayment,
+                            data: payment,
+                            view: "editPayment",
+                          }))
+                        }
                         marginRight={3}
                       >
                         <Icon as={FiEdit} color="black" />
                       </Button>
                       <Button
                         size="xs"
-                        onClick={() => handleDeleteBill(bill?.id!)}
+                        onClick={() =>
+                          setModal((prev) => ({
+                            ...prev,
+                            open: true,
+                            handleAction: handleDeletePayment,
+                            data: { paymentId: payment.id },
+                            view: "deletePayment",
+                          }))
+                        }
                       >
                         <Icon as={FiTrash2} color="black" />
                       </Button>

@@ -29,10 +29,10 @@ const getList = (
 const deleteOne = ({ paymentId }: DeleteOneParams, token: string) =>
   Api.deleteOne({ path: `payments/${paymentId}`, token });
 
-const update = ({ paymentId }: UpdateParams, token: string) =>
-  Api.put({
-    path: `payments/${paymentId}`,
-    body: {},
+const update = (payment: UpdateParams, token: string) =>
+  Api.put<Payment>({
+    path: `payments/${payment.id}`,
+    body: payment,
     token,
   });
 

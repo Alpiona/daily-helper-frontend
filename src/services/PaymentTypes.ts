@@ -21,7 +21,11 @@ export type DeleteOneParams = {
 };
 
 export type UpdateParams = {
-  paymentId: string;
+  id: string;
+  billId: string;
+  value?: number;
+  referenceDate: string;
+  paidAt?: string;
 };
 
 export type CreateParams = {
