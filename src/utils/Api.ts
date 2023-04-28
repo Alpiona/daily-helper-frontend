@@ -6,7 +6,7 @@ type RequestParams = {
 };
 
 type BaseResponse<T = {}> = {
-  errors?: Array<{ message: string }>;
+  errors: Array<{ message: string }>;
   data: T;
 };
 
@@ -14,18 +14,17 @@ const prepareResponse = async (fetcher: Promise<Response>) => {
   try {
     const response = await fetcher;
 
-    if (response.status === 204) {
-      return { data: {}, errors: undefined };
-    }
+    // if (response.status === 204 || response.status === 201) {
+    //   return { data: {}, errors: undefined };
+    // }
 
     const data = await response.json();
 
     return {
-      data: data.data || {},
+      data: data.data,
       errors: data.errors,
     };
   } catch (err: any) {
-    console.log("ERROR", err);
     throw new Error(err);
   }
 };
@@ -55,6 +54,25 @@ const post = async <T>({
 }: RequestParams): Promise<BaseResponse<T>> => {
   const fetcher = fetch(`/api/${path}` + new URLSearchParams(queryParams), {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+    credentials: "include",
+  });
+
+  return await prepareResponse(fetcher);
+};
+
+const patch = async <T>({
+  path,
+  queryParams,
+  body,
+  token,
+}: RequestParams): Promise<BaseResponse<T>> => {
+  const fetcher = fetch(`/api/${path}` + new URLSearchParams(queryParams), {
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -102,6 +120,7 @@ const deleteOne = async <T>({
 export const Api = {
   get,
   post,
+  patch,
   put,
   deleteOne,
 };

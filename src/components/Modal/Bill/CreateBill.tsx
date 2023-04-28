@@ -11,8 +11,8 @@ type CreateBillProps = {
 const CreateBill: React.FC<CreateBillProps> = ({ handleCreateBill }) => {
   const [createBillForm, setCreateBillForm] = useState({
     name: "",
-    description: "",
-    dueDay: undefined,
+    description: undefined,
+    dueDay: 0,
   });
   const [error, setError] = useState("");
   const router = useRouter();
@@ -61,7 +61,6 @@ const CreateBill: React.FC<CreateBillProps> = ({ handleCreateBill }) => {
           bg="gray.50"
         />
         <Input
-          required
           name="description"
           placeholder="description"
           type="text"

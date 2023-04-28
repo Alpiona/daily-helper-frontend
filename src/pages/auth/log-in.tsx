@@ -1,4 +1,4 @@
-import { UserService } from "@/services/UserService";
+import { UserService } from "@/services/User/UserService";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import { default as NextLink } from "next/link";
 import { useRouter } from "next/router";
@@ -111,12 +111,14 @@ const Login: React.FC = () => {
               Forgot your password?
             </Text>
             <Text
-              fontSize="9pt"
+              as={NextLink}
+              href="/auth/send-reset-password"
               color="blue.500"
+              fontSize="9pt"
+              fontWeight={700}
               cursor="pointer"
-              onClick={() => {}}
             >
-              Reset
+              Reset Password
             </Text>
           </Flex>
           <Flex fontSize="9pt" justifyContent="center">

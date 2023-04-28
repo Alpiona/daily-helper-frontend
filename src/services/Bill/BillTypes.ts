@@ -1,8 +1,8 @@
 export type Bill = {
   id: string;
   name: string;
-  description: string;
-  dueDay?: number;
+  description?: string;
+  dueDay: number;
   monthPaid?: boolean;
 };
 
@@ -23,11 +23,11 @@ export type UpdateParams = {
   id: string;
   name: string;
   description?: string;
-  dueDay?: number;
+  dueDay: number;
 };
 
 export type CreateParams = {
   name: string;
   description?: string;
-  dueDay?: number;
+  dueDay: number;
 };

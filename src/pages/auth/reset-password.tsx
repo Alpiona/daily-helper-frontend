@@ -1,26 +1,45 @@
 import { UserService } from "@/services/User/UserService";
-import { Box, Button, Flex, Input, Text, useToast } from "@chakra-ui/react";
-import { default as NextLink } from "next/link";
-import React, { useState } from "react";
+import { Box, Button, Input, useToast } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
-const SignUp: React.FC = () => {
+const ResetPassword: React.FC = () => {
   const [signUpForm, setSignUpForm] = useState({
-    email: "",
     password: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState("");
+  const router = useRouter();
   const toast = useToast();
+  const token = router.query.token as string | undefined;
 
-  //Firebase logic
+  useEffect(() => {
+    if (!token && router.isReady) {
+      toast({
+        title: "Error",
+        description: "Please, make another reset password request",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [token, router.isReady, toast]);
+
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("");
 
-    if (signUpForm.password !== signUpForm.confirmPassword) {
+    if (!token) {
+      toast({
+        title: "Error",
+        description: "Please, make another reset password request",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    } else if (signUpForm.password !== signUpForm.confirmPassword) {
       toast({
         title: "Invalid data",
-        description: "Passwords do not match",
+        description: "Confirm your password",
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -28,25 +47,26 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    const { errors } = await UserService.signUp({
-      email: signUpForm.email,
-      password: signUpForm.password,
-      passwordConfirmation: signUpForm.confirmPassword,
-    });
+    const { errors } = await UserService.resetPassword(
+      {
+        password: signUpForm.password,
+        passwordConfirmation: signUpForm.confirmPassword,
+      },
+      token
+    );
 
     if (errors && errors[0]) {
       toast({
-        title: "Fail to sign up",
+        title: "Error",
         description: errors[0].message,
         status: "error",
         duration: 9000,
         isClosable: true,
       });
-      setError(errors[0].message);
     } else {
       toast({
-        title: "Sign up successfully",
-        description: "Confirmation email has been sent",
+        title: "Password updated",
+        description: "You can log in with the new password",
         status: "success",
         duration: 9000,
         isClosable: true,
@@ -71,28 +91,6 @@ const SignUp: React.FC = () => {
     >
       <Box margin={6}>
         <form onSubmit={onSubmit}>
-          <Input
-            required
-            name="email"
-            placeholder="email"
-            type="email"
-            mb={2}
-            onChange={onChange}
-            fontSize="10pt"
-            _placeholder={{ color: "gray.500" }}
-            _hover={{
-              bg: "white",
-              border: "1px solid",
-              borderColor: "blue.500",
-            }}
-            _focus={{
-              outline: "none",
-              bg: "white",
-              border: "1px solid",
-              borderColor: "blue.500",
-            }}
-            bg="gray.50"
-          />
           <Input
             required
             name="password"
@@ -137,28 +135,13 @@ const SignUp: React.FC = () => {
             }}
             bg="gray.50"
           />
-          <Text textAlign="center" color="red" fontSize="10pt">
-            {error}
-          </Text>
           <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-            Sign Up
+            Reset Password
           </Button>
-          <Flex fontSize="9pt" justifyContent="center">
-            <Text mr={1}>Already registered?</Text>
-            <Text
-              as={NextLink}
-              href="/auth/log-in"
-              color="blue.500"
-              fontWeight={700}
-              cursor="pointer"
-            >
-              Log In
-            </Text>
-          </Flex>
         </form>
       </Box>
     </Box>
   );
 };
 
-export default SignUp;
+export default ResetPassword;

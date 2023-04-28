@@ -8,7 +8,8 @@ export function middleware(request: NextRequest) {
   if (
     token &&
     (request.nextUrl.pathname.includes("log-in") ||
-      request.nextUrl.pathname.includes("sign-up"))
+      request.nextUrl.pathname.includes("sign-up") ||
+      request.nextUrl.pathname.includes("reset-password"))
   ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -16,7 +17,8 @@ export function middleware(request: NextRequest) {
   if (
     !token &&
     !request.nextUrl.pathname.includes("log-in") &&
-    !request.nextUrl.pathname.includes("sign-up")
+    !request.nextUrl.pathname.includes("sign-up") &&
+    !request.nextUrl.pathname.includes("reset-password")
   ) {
     return NextResponse.redirect(new URL("/auth/log-in", request.url));
   }

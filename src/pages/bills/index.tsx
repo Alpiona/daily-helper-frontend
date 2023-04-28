@@ -1,6 +1,6 @@
 import { modalState } from "@/atoms/modalAtom";
-import { BillService } from "@/services/BillService";
-import { Bill } from "@/services/BillTypes";
+import { BillService } from "@/services/Bill/BillService";
+import { Bill } from "@/services/Bill/BillTypes";
 import {
   Box,
   Button,
@@ -70,7 +70,13 @@ const BillsPage: React.FC = () => {
 
   return (
     <>
-      <Box marginX="auto" marginTop="30pt" bg="white" width="50%">
+      <Box
+        marginX="auto"
+        marginTop="30pt"
+        bg="white"
+        width="50%"
+        borderRadius={10}
+      >
         <Flex justifyContent="center" margin={3}>
           <Text>
             <b>Bills Control</b>

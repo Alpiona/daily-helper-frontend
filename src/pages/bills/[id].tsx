@@ -1,8 +1,8 @@
 import { modalState } from "@/atoms/modalAtom";
-import { BillService } from "@/services/BillService";
-import { Bill } from "@/services/BillTypes";
-import { PaymentService } from "@/services/PaymentService";
-import { Payment } from "@/services/PaymentTypes";
+import { BillService } from "@/services/Bill/BillService";
+import { Bill } from "@/services/Bill/BillTypes";
+import { PaymentService } from "@/services/Payment/PaymentService";
+import { Payment } from "@/services/Payment/PaymentTypes";
 import {
   Box,
   Button,
