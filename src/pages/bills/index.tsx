@@ -4,7 +4,9 @@ import { Bill } from "@/services/Bill/BillTypes";
 import {
   Box,
   Button,
+  Center,
   Flex,
+  Icon,
   Table,
   TableContainer,
   Tbody,
@@ -18,12 +20,12 @@ import { default as NextLink } from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { FiCheck, FiClock, FiX } from "react-icons/fi";
 import { useRecoilState, useResetRecoilState } from "recoil";
 
 const BillsPage: React.FC = () => {
   const [modal, setModal] = useRecoilState(modalState);
   const resetModal = useResetRecoilState(modalState);
-  const [error, setError] = useState("");
   const router = useRouter();
   const [bills, setBills] = useState<Bill[]>([]);
   const [cookies, , removeCookie] = useCookies(["token"]);
@@ -33,16 +35,47 @@ const BillsPage: React.FC = () => {
       newBill,
       cookies.token
     );
-    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
-      removeCookie("token");
-      router.push("/auth/log-in");
-    } else if (fetchErrors && fetchErrors.length > 0) {
-      setError(fetchErrors[0].message);
+    if (fetchErrors && fetchErrors[0]) {
+      console.log(fetchErrors);
     } else {
       setBills([...bills, { ...newBill, id: data.id }]);
     }
 
     resetModal();
+  };
+
+  const renderPaidRow = (dueDay: number, paid: boolean) => {
+    const today = new Date().getDay();
+    const type = paid ? "success" : today <= dueDay ? "warning" : "problem";
+
+    switch (type) {
+      case "success":
+        return (
+          <Flex alignItems="center">
+            <Center bg="green.100" borderRadius="md" w={10} marginX="auto">
+              <Icon as={FiCheck} boxSize={4} color="green" mx="auto" />
+            </Center>
+          </Flex>
+        );
+
+      case "warning":
+        return (
+          <Flex alignItems="center">
+            <Center bg="yellow.100" borderRadius="md" w={10} marginX="auto">
+              <Icon as={FiClock} boxSize={4} color="yellow.300" mx="auto" />
+            </Center>
+          </Flex>
+        );
+
+      case "problem":
+        return (
+          <Flex alignItems="center">
+            <Center bg="red.100" borderRadius="md" w={10} marginX="auto">
+              <Icon as={FiX} boxSize={4} color="red" mx="auto" />
+            </Center>
+          </Flex>
+        );
+    }
   };
 
   useEffect(() => {
@@ -54,18 +87,13 @@ const BillsPage: React.FC = () => {
 
       if (fetchErrors && fetchErrors[0]) {
         const errorMessage = fetchErrors[0].message;
-        setError(errorMessage);
       } else if (data) {
+        console.log("data", data);
         setBills(data);
-      }
-
-      if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
-        removeCookie("token");
-        router.push("/auth/log-in");
       }
     };
 
-    fetchData().catch(() => setError("Error unexpected, try again later"));
+    fetchData().catch(() => {});
   }, [cookies.token, removeCookie, router]);
 
   return (
@@ -86,9 +114,13 @@ const BillsPage: React.FC = () => {
           <Table size="sm">
             <Thead>
               <Tr>
-                <Th>Name</Th>
-                <Th>Due Day</Th>
-                <Th>Paid</Th>
+                <Th width="50%">Name</Th>
+                <Th width="25%" textAlign="center">
+                  Due Day
+                </Th>
+                <Th width="25%" textAlign="center">
+                  Paid
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -99,8 +131,12 @@ const BillsPage: React.FC = () => {
                       {b.name}
                     </Text>
                   </Td>
-                  <Td>{b.dueDay}</Td>
-                  <Td>{b.monthPaid}</Td>
+                  <Td textAlign="center">
+                    {b.dueDay > 9 ? b.dueDay : `0${b.dueDay}`}
+                  </Td>
+                  <Td textAlign="center">
+                    {renderPaidRow(b.dueDay, b.monthPaid)}
+                  </Td>
                 </Tr>
               ))}
             </Tbody>

@@ -3,7 +3,7 @@ export type Bill = {
   name: string;
   description?: string;
   dueDay: number;
-  monthPaid?: boolean;
+  monthPaid: boolean;
 };
 
 export type GetOneParams = {

@@ -30,7 +30,6 @@ const BillDetails: React.FC = () => {
   const resetModal = useResetRecoilState(modalState);
   const [bill, setBill] = useState<Bill>();
   const [payments, setPayments] = useState<Payment[]>([]);
-  const [error, setError] = useState("");
   const [cookies, , removeCookie] = useCookies(["token"]);
   const router = useRouter();
   const billId = router.query.id;
@@ -45,7 +44,6 @@ const BillDetails: React.FC = () => {
       removeCookie("token");
       router.push("/auth/log-in");
     } else if (fetchErrors && fetchErrors.length > 0) {
-      setError(fetchErrors[0].message);
     } else {
       setBill(updatedBill);
     }
@@ -59,27 +57,25 @@ const BillDetails: React.FC = () => {
       cookies.token
     );
 
-    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
+    if (fetchErrors && fetchErrors[0]) {
       removeCookie("token");
       router.push("/auth/log-in");
     } else if (fetchErrors && fetchErrors.length > 0) {
-      setError(fetchErrors[0].message);
     }
 
     router.push("/bills");
   };
 
   const handleCreatePayment = async (newPayment: Payment) => {
-    const { data, errors: fetchErrors } = await PaymentService.create(
+    const { data, errors } = await PaymentService.create(
       newPayment,
       cookies.token
     );
 
-    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
+    if (errors && errors[0]) {
       removeCookie("token");
       router.push("/auth/log-in");
-    } else if (fetchErrors && fetchErrors.length > 0) {
-      setError(fetchErrors[0].message);
+    } else if (errors && errors[0]) {
     }
 
     const updatedPayments = [...payments, data].sort(
@@ -92,16 +88,15 @@ const BillDetails: React.FC = () => {
   };
 
   const handleEditPayment = async (updatedPayment: Payment) => {
-    const { data, errors: fetchErrors } = await PaymentService.update(
+    const { data, errors } = await PaymentService.update(
       updatedPayment,
       cookies.token
     );
 
-    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
+    if (errors && errors[0].message === "Access unauthorized") {
       removeCookie("token");
       router.push("/auth/log-in");
-    } else if (fetchErrors && fetchErrors.length > 0) {
-      setError(fetchErrors[0].message);
+    } else if (errors && errors[0]) {
     } else {
       const paymentIndex = payments.findIndex(
         (p) => p.id === updatedPayment.id
@@ -117,16 +112,15 @@ const BillDetails: React.FC = () => {
   };
 
   const handleDeletePayment = async (paymentId: string) => {
-    const { errors: fetchErrors } = await PaymentService.deleteOne(
+    const { errors } = await PaymentService.deleteOne(
       { paymentId },
       cookies.token
     );
 
-    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
+    if (errors && errors[0]) {
       removeCookie("token");
       router.push("/auth/log-in");
-    } else if (fetchErrors && fetchErrors.length > 0) {
-      setError(fetchErrors[0].message);
+    } else if (errors && errors[0]) {
     } else {
       setPayments(payments.filter((p) => p.id !== paymentId));
     }
@@ -142,8 +136,6 @@ const BillDetails: React.FC = () => {
       );
 
       if (errors && errors[0]) {
-        const errorMessage = errors[0].message;
-        setError(errorMessage);
       } else if (data) {
         setBill(data);
       }
@@ -156,20 +148,24 @@ const BillDetails: React.FC = () => {
       );
 
       if (errors && errors[0]) {
-        const errorMessage = errors[0].message;
-        setError(errorMessage);
       } else if (data) {
         setPayments(data);
       }
     };
 
-    fetchPaymentsData().catch(() => setError("fetchPayments error"));
-    fetchBillData().catch(() => setError("fetchBill error"));
+    fetchPaymentsData().catch(() => {});
+    fetchBillData().catch(() => {});
   }, [billId, cookies]);
 
   return (
     <>
-      <Box marginX="auto" marginTop="30pt" bg="white" width="50%" padding={2}>
+      <Box
+        marginX="auto"
+        marginTop="30pt"
+        bg="white"
+        width="50%"
+        borderRadius={10}
+      >
         <Flex justifyContent="center" margin={3}>
           <Text>
             <b>Bill Details</b>
@@ -193,13 +189,13 @@ const BillDetails: React.FC = () => {
               <Text>
                 <b>Due Day:</b>
               </Text>
-              <Text>{bill.dueDay}</Text>
+              <Text>{bill.dueDay < 10 ? `0${bill.dueDay}` : bill.dueDay}</Text>
             </Flex>
           </Flex>
         )}
 
         <Flex justifyContent="end">
-          <Button
+          {/* <Button
             size="sm"
             marginX={3}
             marginBottom={3}
@@ -222,7 +218,7 @@ const BillDetails: React.FC = () => {
             onClick={() => handleDeleteBill(bill?.id!)}
           >
             <Icon as={FiTrash2} color="black" />
-          </Button>
+          </Button> */}
         </Flex>
 
         <Divider />

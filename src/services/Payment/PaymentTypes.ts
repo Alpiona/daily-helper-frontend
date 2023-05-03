@@ -3,7 +3,7 @@ export type Payment = {
   billId: string;
   value?: number;
   referenceDate: string;
-  paidAt?: string;
+  paidAt: string;
 };
 
 export type GetOneParams = {
