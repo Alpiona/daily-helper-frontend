@@ -26,11 +26,11 @@ const menuOptions = [
 ];
 
 const SideNavbar: React.FC = () => {
-  const [modal] = useRecoilState(sideNavbarState);
+  const [sideNavbar, setSideNavbar] = useRecoilState(sideNavbarState);
 
   return (
     <Slide
-      in={modal.isOpen}
+      in={sideNavbar.isOpen}
       style={{
         zIndex: 10,
         height: "100%",
@@ -47,6 +47,12 @@ const SideNavbar: React.FC = () => {
         width="150px"
         bottom="0"
         height="100%"
+        onClick={() =>
+          setSideNavbar((prev) => ({
+            ...prev,
+            isOpen: false,
+          }))
+        }
       >
         <VStack spacing="10px" align="center">
           {menuOptions.map((mo) => (
