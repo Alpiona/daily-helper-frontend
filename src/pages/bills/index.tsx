@@ -80,21 +80,19 @@ const BillsPage: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data, errors: fetchErrors } = await BillService.getList(
+      const { data, errors } = await BillService.getList(
         { orderBy: undefined, orderByDirection: undefined },
         cookies.token
       );
 
-      if (fetchErrors && fetchErrors[0]) {
-        const errorMessage = fetchErrors[0].message;
+      if (errors && errors[0]) {
       } else if (data) {
-        console.log("data", data);
         setBills(data);
       }
     };
 
     fetchData().catch(() => {});
-  }, [cookies.token, removeCookie, router]);
+  }, [cookies.token]);
 
   return (
     <>

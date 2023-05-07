@@ -23,7 +23,7 @@ const CreateBill: React.FC<CreateBillProps> = ({ handleCreateBill }) => {
     handleCreateBill({
       name: createBillForm.name,
       description: createBillForm.description,
-      dueDay: createBillForm.dueDay,
+      dueDay: Number(createBillForm.dueDay),
     });
   };
 

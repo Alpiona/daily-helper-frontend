@@ -8,7 +8,7 @@ const Layout: React.FC<ScriptProps> = ({ children }) => {
   return (
     <>
       <Navbar />
-      <Flex height="100%">
+      <Flex>
         <SideNavbar />
         {children}
       </Flex>

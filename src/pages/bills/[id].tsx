@@ -35,15 +35,9 @@ const BillDetails: React.FC = () => {
   const billId = router.query.id;
 
   const handleEditBill = async (updatedBill: Bill) => {
-    const { errors: fetchErrors } = await BillService.update(
-      updatedBill,
-      cookies.token
-    );
+    const { errors } = await BillService.update(updatedBill, cookies.token);
 
-    if (fetchErrors && fetchErrors[0].message === "Access unauthorized") {
-      removeCookie("token");
-      router.push("/auth/log-in");
-    } else if (fetchErrors && fetchErrors.length > 0) {
+    if (errors && errors[0]) {
     } else {
       setBill(updatedBill);
     }
@@ -52,15 +46,9 @@ const BillDetails: React.FC = () => {
   };
 
   const handleDeleteBill = async (billId: string) => {
-    const { errors: fetchErrors } = await BillService.deleteOne(
-      { billId },
-      cookies.token
-    );
+    const { errors } = await BillService.deleteOne({ billId }, cookies.token);
 
-    if (fetchErrors && fetchErrors[0]) {
-      removeCookie("token");
-      router.push("/auth/log-in");
-    } else if (fetchErrors && fetchErrors.length > 0) {
+    if (errors && errors[0]) {
     }
 
     router.push("/bills");
@@ -73,9 +61,6 @@ const BillDetails: React.FC = () => {
     );
 
     if (errors && errors[0]) {
-      removeCookie("token");
-      router.push("/auth/log-in");
-    } else if (errors && errors[0]) {
     }
 
     const updatedPayments = [...payments, data].sort(
@@ -129,32 +114,34 @@ const BillDetails: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchBillData = async () => {
-      const { data, errors } = await BillService.getOne(
-        { billId: String(billId) },
-        cookies.token
-      );
+    if (billId) {
+      const fetchBillData = async () => {
+        const { data, errors } = await BillService.getOne(
+          { billId: String(billId) },
+          cookies.token
+        );
 
-      if (errors && errors[0]) {
-      } else if (data) {
-        setBill(data);
-      }
-    };
+        if (errors && errors[0]) {
+        } else if (data) {
+          setBill(data);
+        }
+      };
 
-    const fetchPaymentsData = async () => {
-      const { data, errors } = await PaymentService.getList(
-        { billId: String(billId) },
-        cookies.token
-      );
+      const fetchPaymentsData = async () => {
+        const { data, errors } = await PaymentService.getList(
+          { billId: String(billId) },
+          cookies.token
+        );
 
-      if (errors && errors[0]) {
-      } else if (data) {
-        setPayments(data);
-      }
-    };
+        if (errors && errors[0]) {
+        } else if (data) {
+          setPayments(data);
+        }
+      };
 
-    fetchPaymentsData().catch(() => {});
-    fetchBillData().catch(() => {});
+      fetchPaymentsData().catch(() => {});
+      fetchBillData().catch(() => {});
+    }
   }, [billId, cookies]);
 
   return (
