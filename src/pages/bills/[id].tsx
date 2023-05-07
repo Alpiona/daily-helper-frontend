@@ -4,11 +4,11 @@ import { Bill } from "@/services/Bill/BillTypes";
 import { PaymentService } from "@/services/Payment/PaymentService";
 import { Payment } from "@/services/Payment/PaymentTypes";
 import {
-  Box,
   Button,
   Divider,
   Flex,
   Icon,
+  Spacer,
   Table,
   TableContainer,
   Tbody,
@@ -146,43 +146,38 @@ const BillDetails: React.FC = () => {
 
   return (
     <>
-      <Box
-        marginX="auto"
-        marginTop="30pt"
-        bg="white"
-        width="50%"
-        borderRadius={10}
-      >
-        <Flex justifyContent="center" margin={3}>
-          <Text>
-            <b>Bill Details</b>
-          </Text>
-        </Flex>
-        {bill && (
-          <Flex marginY={3} marginX={5} fontSize={15}>
-            <Flex width="35%" justifyContent="start">
-              <Text>
-                <b>Name:</b>
-              </Text>
-              <Text>{bill.name}</Text>
-            </Flex>
-            <Flex width="50%" justifyContent="start">
-              <Text>
-                <b>Description:</b>
-              </Text>
-              <Text>{bill.description}</Text>
-            </Flex>
-            <Flex width="15%" justifyContent="start">
-              <Text>
-                <b>Due Day:</b>
-              </Text>
-              <Text>{bill.dueDay < 10 ? `0${bill.dueDay}` : bill.dueDay}</Text>
-            </Flex>
+      <Flex justifyContent="center" margin={3}>
+        <Text>
+          <b>Bill Details</b>
+        </Text>
+      </Flex>
+      {bill && (
+        <Flex marginY={3} marginX={5} fontSize={15} flexWrap="wrap">
+          <Flex width="150px" justifyContent="start">
+            <Text>
+              <b>Name:</b>
+            </Text>
+            <Text>{bill.name}</Text>
           </Flex>
-        )}
+          <Spacer />
+          <Flex width="100px" justifyContent="start">
+            <Text>
+              <b>Due Day:</b>
+            </Text>
+            <Text>{bill.dueDay < 10 ? `0${bill.dueDay}` : bill.dueDay}</Text>
+          </Flex>
+          <Spacer />
+          <Flex width="300px" justifyContent="start">
+            <Text>
+              <b>Description:</b>
+            </Text>
+            <Text>{bill.description}</Text>
+          </Flex>
+        </Flex>
+      )}
 
-        <Flex justifyContent="end">
-          {/* <Button
+      <Flex justifyContent="end">
+        {/* <Button
             size="sm"
             marginX={3}
             marginBottom={3}
@@ -206,93 +201,92 @@ const BillDetails: React.FC = () => {
           >
             <Icon as={FiTrash2} color="black" />
           </Button> */}
-        </Flex>
+      </Flex>
 
-        <Divider />
+      <Divider />
 
-        <Flex justifyContent="center" marginTop={4}>
-          <Text>
-            <b>Payments</b>
-          </Text>
-        </Flex>
+      <Flex justifyContent="center" marginTop={4}>
+        <Text>
+          <b>Payments</b>
+        </Text>
+      </Flex>
 
-        <TableContainer margin={4} borderRadius={3}>
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th>Reference Date</Th>
-                <Th>Paid At</Th>
-                <Th>Value</Th>
-                <Th width="15%"></Th>
+      <TableContainer margin={4} borderRadius={3}>
+        <Table size="sm">
+          <Thead>
+            <Tr>
+              <Th>Reference Date</Th>
+              <Th>Paid At</Th>
+              <Th>Value</Th>
+              <Th width="15%"></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {payments.map((payment) => (
+              <Tr key={payment.id}>
+                <Td>{format(new Date(payment.referenceDate), "MM/yyyy")}</Td>
+                <Td>
+                  {payment.paidAt
+                    ? format(new Date(payment.paidAt), "dd/MM/yyyy")
+                    : "--"}
+                </Td>
+                <Td>{payment.value || payment.value?.toFixed(2)}</Td>
+                <Td>
+                  <Flex align="center">
+                    <Button
+                      size="xs"
+                      onClick={() =>
+                        setModal((prev) => ({
+                          ...prev,
+                          open: true,
+                          handleAction: handleEditPayment,
+                          data: payment,
+                          view: "editPayment",
+                        }))
+                      }
+                      marginRight={3}
+                    >
+                      <Icon as={FiEdit} color="black" />
+                    </Button>
+                    <Button
+                      size="xs"
+                      onClick={() =>
+                        setModal((prev) => ({
+                          ...prev,
+                          open: true,
+                          handleAction: handleDeletePayment,
+                          data: { paymentId: payment.id },
+                          view: "deletePayment",
+                        }))
+                      }
+                    >
+                      <Icon as={FiTrash2} color="black" />
+                    </Button>
+                  </Flex>
+                </Td>
               </Tr>
-            </Thead>
-            <Tbody>
-              {payments.map((payment) => (
-                <Tr key={payment.id}>
-                  <Td>{format(new Date(payment.referenceDate), "MM/yyyy")}</Td>
-                  <Td>
-                    {payment.paidAt
-                      ? format(new Date(payment.paidAt), "dd/MM/yyyy")
-                      : "--"}
-                  </Td>
-                  <Td>{payment.value || payment.value?.toFixed(2)}</Td>
-                  <Td>
-                    <Flex align="center">
-                      <Button
-                        size="xs"
-                        onClick={() =>
-                          setModal((prev) => ({
-                            ...prev,
-                            open: true,
-                            handleAction: handleEditPayment,
-                            data: payment,
-                            view: "editPayment",
-                          }))
-                        }
-                        marginRight={3}
-                      >
-                        <Icon as={FiEdit} color="black" />
-                      </Button>
-                      <Button
-                        size="xs"
-                        onClick={() =>
-                          setModal((prev) => ({
-                            ...prev,
-                            open: true,
-                            handleAction: handleDeletePayment,
-                            data: { paymentId: payment.id },
-                            view: "deletePayment",
-                          }))
-                        }
-                      >
-                        <Icon as={FiTrash2} color="black" />
-                      </Button>
-                    </Flex>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
-        <Flex justifyContent="end">
-          <Button
-            size="sm"
-            marginX={3}
-            marginBottom={3}
-            onClick={() =>
-              setModal((prev) => ({
-                ...prev,
-                open: true,
-                handleAction: handleCreatePayment,
-                data: { billId: bill?.id },
-                view: "createPayment",
-              }))
-            }
-          >
-            <Icon as={FiPlusSquare} color="black" />
-          </Button>
-        </Flex>
-      </Box>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <Flex justifyContent="end">
+        <Button
+          size="sm"
+          marginX={3}
+          marginBottom={3}
+          onClick={() =>
+            setModal((prev) => ({
+              ...prev,
+              open: true,
+              handleAction: handleCreatePayment,
+              data: { billId: bill?.id },
+              view: "createPayment",
+            }))
+          }
+        >
+          <Icon as={FiPlusSquare} color="black" />
+        </Button>
+      </Flex>
     </>
   );
 };

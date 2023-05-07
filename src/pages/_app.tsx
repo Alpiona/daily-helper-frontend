@@ -9,8 +9,8 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <ChakraProvider theme={theme}>
+        <BaseModal />
         <Layout>
-          <BaseModal />
           <Component {...pageProps} />
         </Layout>
       </ChakraProvider>

@@ -43,42 +43,34 @@ const SendResetPassword: React.FC = () => {
   };
 
   return (
-    <Box
-      marginX="auto"
-      marginTop="30pt"
-      bg="gray.200"
-      width="50%"
-      borderRadius={10}
-    >
-      <Box margin={6}>
-        <form onSubmit={onSubmit}>
-          <Input
-            required
-            name="email"
-            placeholder="email"
-            type="email"
-            mb={2}
-            onChange={onChange}
-            fontSize="10pt"
-            _placeholder={{ color: "gray.500" }}
-            _hover={{
-              bg: "white",
-              border: "1px solid",
-              borderColor: "blue.500",
-            }}
-            _focus={{
-              outline: "none",
-              bg: "white",
-              border: "1px solid",
-              borderColor: "blue.500",
-            }}
-            bg="gray.50"
-          />
-          <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-            Reset Password
-          </Button>
-        </form>
-      </Box>
+    <Box margin={6}>
+      <form onSubmit={onSubmit}>
+        <Input
+          required
+          name="email"
+          placeholder="email"
+          type="email"
+          mb={2}
+          onChange={onChange}
+          fontSize="10pt"
+          _placeholder={{ color: "gray.500" }}
+          _hover={{
+            bg: "white",
+            border: "1px solid",
+            borderColor: "blue.500",
+          }}
+          _focus={{
+            outline: "none",
+            bg: "white",
+            border: "1px solid",
+            borderColor: "blue.500",
+          }}
+          bg="gray.50"
+        />
+        <Button width="100%" height="36px" mt={2} mb={2} type="submit">
+          Reset Password
+        </Button>
+      </form>
     </Box>
   );
 };

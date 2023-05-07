@@ -1,5 +1,6 @@
 import { Button, Flex, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
@@ -8,10 +9,12 @@ type AuthButtonsProps = {};
 const AuthButtons: React.FC<AuthButtonsProps> = () => {
   const [cookies, , removeCookie] = useCookies(["token"]);
   const [token, setToken] = useState("");
+  const router = useRouter();
 
   const logout = async () => {
     removeCookie("token");
     setToken("");
+    router.push("/");
   };
 
   useEffect(() => {

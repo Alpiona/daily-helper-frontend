@@ -36,20 +36,12 @@ const SignUpConfirmation: React.FC = () => {
   }, [token]);
 
   return (
-    <Box
-      marginX="auto"
-      marginTop="30pt"
-      bg="gray.200"
-      width="50%"
-      borderRadius={10}
-    >
-      <Box margin={6}>
-        <Flex fontSize="9pt" justifyContent="center">
-          <Text mr={1} fontSize={15} textColor={isSuccess ? "green" : "red"}>
-            {mainText}
-          </Text>
-        </Flex>
-      </Box>
+    <Box margin={6}>
+      <Flex fontSize="9pt" justifyContent="center">
+        <Text mr={1} fontSize={15} textColor={isSuccess ? "green" : "red"}>
+          {mainText}
+        </Text>
+      </Flex>
     </Box>
   );
 };

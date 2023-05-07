@@ -11,7 +11,6 @@ const Navbar: React.FC<ScriptProps> = () => {
   const [modal, setModal] = useRecoilState(sideNavbarState);
 
   const handleOpenSideNavbar = () => {
-    console.log(modal, !modal.isOpen);
     setModal((prev) => ({ ...prev, isOpen: !modal.isOpen }));
   };
 

@@ -2,7 +2,6 @@ import { modalState } from "@/atoms/modalAtom";
 import { BillService } from "@/services/Bill/BillService";
 import { Bill } from "@/services/Bill/BillTypes";
 import {
-  Box,
   Button,
   Center,
   Flex,
@@ -36,7 +35,6 @@ const BillsPage: React.FC = () => {
       cookies.token
     );
     if (fetchErrors && fetchErrors[0]) {
-      console.log(fetchErrors);
     } else {
       setBills([...bills, { ...newBill, id: data.id }]);
     }
@@ -96,67 +94,59 @@ const BillsPage: React.FC = () => {
 
   return (
     <>
-      <Box
-        marginX="auto"
-        marginTop="30pt"
-        bg="white"
-        width="50%"
-        borderRadius={10}
-      >
-        <Flex justifyContent="center" margin={3}>
-          <Text>
-            <b>Bills Control</b>
-          </Text>
-        </Flex>
-        <TableContainer margin={4} borderRadius={3}>
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th width="50%">Name</Th>
-                <Th width="25%" textAlign="center">
-                  Due Day
-                </Th>
-                <Th width="25%" textAlign="center">
-                  Paid
-                </Th>
+      <Flex justifyContent="center" margin={3}>
+        <Text>
+          <b>Bills Control</b>
+        </Text>
+      </Flex>
+      <TableContainer margin={4} borderRadius={3}>
+        <Table size="sm">
+          <Thead>
+            <Tr>
+              <Th width="50%">Name</Th>
+              <Th width="25%" textAlign="center">
+                Due Day
+              </Th>
+              <Th width="25%" textAlign="center">
+                Paid
+              </Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {bills.map((b) => (
+              <Tr key={b.id}>
+                <Td>
+                  <Text as={NextLink} href={`/bills/${b.id}`}>
+                    {b.name}
+                  </Text>
+                </Td>
+                <Td textAlign="center">
+                  {b.dueDay > 9 ? b.dueDay : `0${b.dueDay}`}
+                </Td>
+                <Td textAlign="center">
+                  {renderPaidRow(b.dueDay, b.monthPaid)}
+                </Td>
               </Tr>
-            </Thead>
-            <Tbody>
-              {bills.map((b) => (
-                <Tr key={b.id}>
-                  <Td>
-                    <Text as={NextLink} href={`/bills/${b.id}`}>
-                      {b.name}
-                    </Text>
-                  </Td>
-                  <Td textAlign="center">
-                    {b.dueDay > 9 ? b.dueDay : `0${b.dueDay}`}
-                  </Td>
-                  <Td textAlign="center">
-                    {renderPaidRow(b.dueDay, b.monthPaid)}
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
-        <Flex justifyContent="end">
-          <Button
-            marginX={3}
-            marginBottom={3}
-            onClick={() =>
-              setModal((prev) => ({
-                ...prev,
-                open: true,
-                handleAction: handleCreateBill,
-                view: "createBill",
-              }))
-            }
-          >
-            +
-          </Button>
-        </Flex>
-      </Box>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <Flex justifyContent="end">
+        <Button
+          marginX={3}
+          marginBottom={3}
+          onClick={() =>
+            setModal((prev) => ({
+              ...prev,
+              open: true,
+              handleAction: handleCreateBill,
+              view: "createBill",
+            }))
+          }
+        >
+          +
+        </Button>
+      </Flex>
     </>
   );
 };

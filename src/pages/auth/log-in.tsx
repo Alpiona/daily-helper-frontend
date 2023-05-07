@@ -47,94 +47,86 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Box
-      marginX="auto"
-      marginTop="30pt"
-      bg="gray.200"
-      width="50%"
-      borderRadius={10}
-    >
-      <Box margin={6}>
-        <form onSubmit={onSubmit}>
-          <Input
-            required
-            name="email"
-            placeholder="email"
-            type="email"
-            mb={2}
-            onChange={onChange}
-            fontSize="10pt"
-            _placeholder={{ color: "gray.500" }}
-            _hover={{
-              bg: "white",
-              border: "1px solid",
-              borderColor: "blue.500",
-            }}
-            _focus={{
-              outline: "none",
-              bg: "white",
-              border: "1px solid",
-              borderColor: "blue.500",
-            }}
-            bg="gray.50"
-          />
-          <Input
-            required
-            name="password"
-            placeholder="password"
-            type="password"
-            mb={2}
-            onChange={onChange}
-            fontSize="10pt"
-            _placeholder={{ color: "gray.500" }}
-            _hover={{
-              bg: "white",
-              border: "1px solid",
-              borderColor: "blue.500",
-            }}
-            _focus={{
-              outline: "none",
-              bg: "white",
-              border: "1px solid",
-              borderColor: "blue.500",
-            }}
-            bg="gray.50"
-          />
-          <Text textAlign="center" color="red" fontSize="10pt">
-            {error}
+    <Box margin={6}>
+      <form onSubmit={onSubmit}>
+        <Input
+          required
+          name="email"
+          placeholder="email"
+          type="email"
+          mb={2}
+          onChange={onChange}
+          fontSize="10pt"
+          _placeholder={{ color: "gray.500" }}
+          _hover={{
+            bg: "white",
+            border: "1px solid",
+            borderColor: "blue.500",
+          }}
+          _focus={{
+            outline: "none",
+            bg: "white",
+            border: "1px solid",
+            borderColor: "blue.500",
+          }}
+          bg="gray.50"
+        />
+        <Input
+          required
+          name="password"
+          placeholder="password"
+          type="password"
+          mb={2}
+          onChange={onChange}
+          fontSize="10pt"
+          _placeholder={{ color: "gray.500" }}
+          _hover={{
+            bg: "white",
+            border: "1px solid",
+            borderColor: "blue.500",
+          }}
+          _focus={{
+            outline: "none",
+            bg: "white",
+            border: "1px solid",
+            borderColor: "blue.500",
+          }}
+          bg="gray.50"
+        />
+        <Text textAlign="center" color="red" fontSize="10pt">
+          {error}
+        </Text>
+        <Button width="100%" height="36px" mt={2} mb={2} type="submit">
+          Log In
+        </Button>
+        <Flex justifyContent="center" mb={2}>
+          <Text fontSize="9pt" mr={1}>
+            Forgot your password?
           </Text>
-          <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-            Log In
-          </Button>
-          <Flex justifyContent="center" mb={2}>
-            <Text fontSize="9pt" mr={1}>
-              Forgot your password?
-            </Text>
-            <Text
-              as={NextLink}
-              href="/auth/send-reset-password"
-              color="blue.500"
-              fontSize="9pt"
-              fontWeight={700}
-              cursor="pointer"
-            >
-              Reset Password
-            </Text>
-          </Flex>
-          <Flex fontSize="9pt" justifyContent="center">
-            <Text mr={1}>New here?</Text>
-            <Text
-              as={NextLink}
-              href="/auth/sign-up"
-              color="blue.500"
-              fontWeight={700}
-              cursor="pointer"
-            >
-              Sign Up
-            </Text>
-          </Flex>
-        </form>
-      </Box>
+          <Text
+            as={NextLink}
+            href="/auth/send-reset-password"
+            color="blue.500"
+            fontSize="9pt"
+            fontWeight={700}
+            cursor="pointer"
+          >
+            Reset Password
+          </Text>
+        </Flex>
+        <Flex fontSize="9pt" justifyContent="center">
+          <Text mr={1}>New here?</Text>
+          <Text
+            as={NextLink}
+            href="/auth/sign-up"
+            color="blue.500"
+            fontWeight={700}
+            cursor="pointer"
+          >
+            Sign Up
+          </Text>
+        </Flex>
+      </form>
     </Box>
   );
 };
