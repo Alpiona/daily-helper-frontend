@@ -88,7 +88,6 @@ const BillsPage: React.FC = () => {
         setBills(data);
       }
     };
-
     fetchData().catch(() => {});
   }, [cookies.token]);
 

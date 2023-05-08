@@ -1,7 +1,7 @@
 import { sideNavbarState } from "@/atoms/sideNavbarAtom";
 import { Flex, Icon } from "@chakra-ui/react";
 import { ScriptProps } from "next/script";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FiAlignJustify } from "react-icons/fi";
 import { IoImageOutline } from "react-icons/io5";
@@ -11,10 +11,17 @@ import UserSpace from "./UserSpace";
 const Navbar: React.FC<ScriptProps> = () => {
   const [sideNavbar, setSideNavbar] = useRecoilState(sideNavbarState);
   const [cookies] = useCookies(["token"]);
+  const [token, setToken] = useState("");
 
   const handleOpenSideNavbar = () => {
     setSideNavbar((prev) => ({ ...prev, isOpen: !sideNavbar.isOpen }));
   };
+
+  useEffect(() => {
+    if (cookies.token) {
+      setToken(cookies.token);
+    }
+  }, [cookies.token]);
 
   return (
     <Flex
@@ -24,7 +31,7 @@ const Navbar: React.FC<ScriptProps> = () => {
       align="center"
       justifyContent={{ md: "space-between" }}
     >
-      {cookies.token && (
+      {token && (
         <Icon
           as={FiAlignJustify}
           fontSize={24}
