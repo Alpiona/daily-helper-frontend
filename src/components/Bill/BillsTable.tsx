@@ -1,4 +1,3 @@
-import { BillService } from "@/services/Bill/BillService";
 import { Bill } from "@/services/Bill/BillTypes";
 import {
   Center,
@@ -14,31 +13,16 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { default as NextLink } from "next/link";
-import React, { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import React from "react";
 import { FiCheck, FiClock, FiX } from "react-icons/fi";
 
-const BillsTable: React.FC = () => {
-  const [bills, setBills] = useState<Bill[]>([]);
-  const [cookies] = useCookies(["token"]);
+type BillsTableProps = {
+  bills: Bill[];
+};
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data, errors } = await BillService.getList(
-        { orderBy: undefined, orderByDirection: undefined },
-        cookies.token
-      );
-
-      if (errors && errors[0]) {
-      } else if (data) {
-        setBills(data);
-      }
-    };
-    fetchData().catch(() => {});
-  }, [cookies.token]);
-
+const BillsTable: React.FC<BillsTableProps> = ({ bills }) => {
   const renderPaidRow = (dueDay: number, paid: boolean) => {
-    const today = new Date().getDay();
+    const today = new Date().getDate();
     const type = paid ? "success" : today <= dueDay ? "warning" : "problem";
 
     switch (type) {

@@ -1,5 +1,6 @@
 import { modalState } from "@/atoms/modalAtom";
 import PaymentsList from "@/components/Bill/PaymentsList";
+import { useApi } from "@/hooks/useApi";
 import { BillService } from "@/services/Bill/BillService";
 import { Bill } from "@/services/Bill/BillTypes";
 import { Button, Divider, Flex, Icon, Spacer, Text } from "@chakra-ui/react";
@@ -16,42 +17,38 @@ const BillDetails: React.FC = () => {
   const [cookies] = useCookies(["token"]);
   const router = useRouter();
   const billId = String(router.query.id);
+  const editBillApi = useApi(BillService.update);
+  const deleteBillApi = useApi(BillService.deleteOne);
+  const getBillApi = useApi(BillService.getOne);
 
   const handleEditBill = async (updatedBill: Bill) => {
-    const { errors } = await BillService.update(updatedBill, cookies.token);
+    await editBillApi.request(
+      { ...updatedBill, billId: updatedBill.id },
+      cookies.token
+    );
 
-    if (!errors) {
-      setBill(updatedBill);
-    }
+    setBill(updatedBill);
 
     resetModal();
   };
 
   const handleDeleteBill = async (billId: string) => {
-    const { errors } = await BillService.deleteOne({ billId }, cookies.token);
+    await deleteBillApi.request({ billId }, cookies.token);
 
-    if (!errors) {
-      router.push("/bills");
-    }
+    router.push("/bills");
   };
 
   useEffect(() => {
-    if (billId) {
-      const fetchBillData = async () => {
-        const { data, errors } = await BillService.getOne(
-          { billId: String(billId) },
-          cookies.token
-        );
-
-        if (errors && errors[0]) {
-        } else if (data) {
-          setBill(data);
-        }
-      };
-
-      fetchBillData().catch(() => {});
+    if (cookies.token && billId) {
+      getBillApi.request({ billId: String(billId) }, cookies.token);
     }
-  }, [billId, cookies]);
+  }, [billId, cookies.token]);
+
+  useEffect(() => {
+    if (getBillApi.data) {
+      setBill(getBillApi.data);
+    }
+  }, [getBillApi.data]);
 
   return (
     <>

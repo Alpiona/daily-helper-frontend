@@ -1,4 +1,4 @@
-import { Api } from "@/utils/Api";
+import client from "@/client/api";
 import {
   LogInData,
   LogInParams,
@@ -7,20 +7,24 @@ import {
   SignUpUserParams,
 } from "./UserTypes";
 
-const logIn = async (data: LogInParams) =>
-  await Api.post<LogInData>({ path: "users/log-in", body: data });
+const logIn = (data: LogInParams) =>
+  client.post<LogInData>("/api/users/log-in", data);
 
-const activate = async (token: string) =>
-  await Api.patch({ path: "users/activate", token });
+const activate = async ({}, token: string) =>
+  client.patch("/api/users/activate", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 const signUp = async (data: SignUpUserParams) =>
-  await Api.post({ path: "users", body: data });
+  client.post("/api/users", data);
 
 const sendResetPassword = async (data: SendResetPasswordUserParams) =>
-  await Api.post({ path: "users/send-reset-password", body: data });
+  client.post("/api/users/send-reset-password", data);
 
 const resetPassword = async (data: ResetPasswordUserParams, token: string) =>
-  await Api.post({ path: "users/reset-password", body: data, token });
+  client.post("/api/users/reset-password", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const UserService = {
   logIn,

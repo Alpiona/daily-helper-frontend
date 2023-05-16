@@ -1,4 +1,5 @@
 import { modalState } from "@/atoms/modalAtom";
+import { useApi } from "@/hooks/useApi";
 import { PaymentService } from "@/services/Payment/PaymentService";
 import { Payment } from "@/services/Payment/PaymentTypes";
 import {
@@ -29,70 +30,62 @@ const PaymentsList: React.FC<PaymentsListProps> = ({ billId }) => {
   const resetModal = useResetRecoilState(modalState);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [cookies] = useCookies(["token"]);
+  const paymentsListApi = useApi(PaymentService.getList);
+  const createPaymentApi = useApi(PaymentService.create);
+  const updatePaymentApi = useApi(PaymentService.update);
+  const deletePaymentApi = useApi(PaymentService.deleteOne);
 
   useEffect(() => {
-    if (billId) {
-      const fetchPaymentsData = async () => {
-        const { data } = await PaymentService.getList(
-          { billId: String(billId) },
-          cookies.token
-        );
-
-        if (data) {
-          setPayments(data);
-        }
-      };
-
-      fetchPaymentsData().catch(() => {});
+    if (cookies.token) {
+      paymentsListApi.request({ billId }, cookies.token);
     }
-  }, [billId, cookies]);
+  }, [cookies.token]);
 
-  const handleCreatePayment = async (newPayment: Payment) => {
-    const { data, errors } = await PaymentService.create(
-      newPayment,
-      cookies.token
-    );
+  useEffect(() => {
+    if (paymentsListApi.data) {
+      setPayments(paymentsListApi.data);
+    }
+  }, [paymentsListApi.data]);
 
-    if (!errors) {
-      const updatedPayments = [...payments, data].sort(
+  useEffect(() => {
+    if (createPaymentApi.data) {
+      const updatedPayments = [...payments, createPaymentApi.data].sort(
         (a, b) => Date.parse(b.referenceDate) - Date.parse(a.referenceDate)
       );
 
       setPayments(updatedPayments);
     }
+  }, [createPaymentApi.data]);
+
+  useEffect(() => {
+    if (updatePaymentApi.data) {
+      const paymentIndex = payments.findIndex(
+        (p) => p.id === updatePaymentApi.data?.id
+      );
+
+      const paymentsUpdated = payments;
+      paymentsUpdated[paymentIndex] = updatePaymentApi.data;
+
+      setPayments(paymentsUpdated);
+    }
+  }, [updatePaymentApi.data]);
+
+  const handleCreatePayment = async (newPayment: Payment) => {
+    await createPaymentApi.request(newPayment, cookies.token);
 
     resetModal();
   };
 
   const handleEditPayment = async (updatedPayment: Payment) => {
-    const { data, errors } = await PaymentService.update(
-      updatedPayment,
-      cookies.token
-    );
-
-    if (!errors) {
-      const paymentIndex = payments.findIndex(
-        (p) => p.id === updatedPayment.id
-      );
-
-      const paymentsUpdated = payments;
-      paymentsUpdated[paymentIndex] = data;
-
-      setPayments(paymentsUpdated);
-    }
+    await updatePaymentApi.request(updatedPayment, cookies.token);
 
     resetModal();
   };
 
   const handleDeletePayment = async (paymentId: string) => {
-    const { errors } = await PaymentService.deleteOne(
-      { paymentId },
-      cookies.token
-    );
+    await deletePaymentApi.request({ paymentId }, cookies.token);
 
-    if (!errors) {
-      setPayments(payments.filter((p) => p.id !== paymentId));
-    }
+    setPayments(payments.filter((p) => p.id !== paymentId));
 
     resetModal();
   };

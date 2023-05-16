@@ -1,4 +1,4 @@
-import { Api } from "@/utils/Api";
+import client from "@/client/api";
 import {
   CreateParams,
   DeleteOneParams,
@@ -9,35 +9,37 @@ import {
 } from "./PaymentTypes";
 
 const getOne = ({ paymentId }: GetOneParams, token: string) =>
-  Api.get<Payment>({ path: `payments/${paymentId}`, token });
+  client.get<Payment>(`/api/payments/${paymentId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 const getList = (
   { billId, orderBy, orderByDirection }: GetListParams,
   token: string
 ) => {
-  const queryParams = { billId };
-  if (orderBy) Object.assign(queryParams, { orderBy });
-  if (orderByDirection) Object.assign(queryParams, { orderByDirection });
-
-  return Api.get<Payment[]>({
-    path: "payments",
-    queryParams,
-    token,
+  // const queryParams = { billId };
+  // if (orderBy) Object.assign(queryParams, { orderBy });
+  // if (orderByDirection) Object.assign(queryParams, { orderByDirection });
+  return client.get<Payment[]>("/api/payments", {
+    params: { billId, orderBy, orderByDirection },
+    headers: { Authorization: `Bearer ${token}` },
   });
 };
 
 const deleteOne = ({ paymentId }: DeleteOneParams, token: string) =>
-  Api.deleteOne({ path: `payments/${paymentId}`, token });
+  client.delete(`/api/payments/${paymentId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 const update = (payment: UpdateParams, token: string) =>
-  Api.put<Payment>({
-    path: `payments/${payment.id}`,
-    body: payment,
-    token,
+  client.put<Payment>(`/api/payments/${payment.id}`, payment, {
+    headers: { Authorization: `Bearer ${token}` },
   });
 
 const create = (data: CreateParams, token: string) =>
-  Api.post<Payment>({ path: "payments", body: data, token });
+  client.post<Payment>("/api/payments", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const PaymentService = {
   getOne,

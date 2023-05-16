@@ -20,7 +20,7 @@ export type DeleteOneParams = {
 };
 
 export type UpdateParams = {
-  id: string;
+  billId: string;
   name: string;
   description?: string;
   dueDay: number;

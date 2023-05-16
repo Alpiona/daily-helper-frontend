@@ -1,4 +1,5 @@
-import { Api } from "@/utils/Api";
+import client from "@/client/api";
+import { AxiosResponse } from "axios";
 import {
   Bill,
   CreateParams,
@@ -8,35 +9,49 @@ import {
   UpdateParams,
 } from "./BillTypes";
 
-const getOne = ({ billId }: GetOneParams, token: string) =>
-  Api.get<Bill>({ path: `bills/${billId}`, token });
+const getOne = (
+  { billId }: GetOneParams,
+  token: string
+): Promise<AxiosResponse<Bill>> =>
+  client.get<Bill>(`/api/bills/${billId}/`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 const getList = (
   { orderBy, orderByDirection }: GetListParams,
   token: string
 ) => {
-  const queryParams = {};
-  if (orderBy) Object.assign(queryParams, { orderBy });
-  if (orderByDirection) Object.assign(queryParams, { orderByDirection });
+  // const queryParams = {};
+  // if (orderBy) Object.assign(queryParams, { orderBy });
+  // if (orderByDirection) Object.assign(queryParams, { orderByDirection });
 
-  return Api.get<Bill[]>({
-    path: "bills",
-    queryParams,
-    token,
+  return client.get<Bill[]>("/api/bills", {
+    params: { orderBy, orderByDirection },
+    headers: { Authorization: `Bearer ${token}` },
   });
 };
 
 const deleteOne = ({ billId }: DeleteOneParams, token: string) =>
-  Api.deleteOne({ path: `bills/${billId}` });
+  client.delete(`/api/bills/${billId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 const update = (
-  { id, name, description, dueDay }: UpdateParams,
+  { billId, name, description, dueDay }: UpdateParams,
   token: string
 ) =>
-  Api.put({ path: `bills/${id}`, body: { name, description, dueDay }, token });
+  client.put(
+    `/api/bills/${billId}`,
+    { name, description, dueDay },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
 const create = (data: CreateParams, token: string) =>
-  Api.post<Bill>({ path: "bills", body: data, token });
+  client.post<Bill>("/api/bills", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export const BillService = {
   getOne,

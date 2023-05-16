@@ -1,8 +1,9 @@
+import { useApi } from "@/hooks/useApi";
 import { UserService } from "@/services/User/UserService";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import { default as NextLink } from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 const Login: React.FC = () => {
@@ -10,33 +11,18 @@ const Login: React.FC = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const router = useRouter();
   const [, setCookie] = useCookies(["token"]);
 
+  const logInApi = useApi(UserService.logIn);
+
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("");
 
-    try {
-      const { data, errors } = await UserService.logIn({
-        email: loginForm.email,
-        password: loginForm.password,
-      });
-
-      if (errors && errors[0]) {
-        const errorMessage = errors[0].message;
-        setError(errorMessage);
-      } else if (data) {
-        setCookie("token", data.token, {
-          path: "/",
-          expires: new Date(data.expiresAt),
-        });
-        router.push("/");
-      }
-    } catch (err) {
-      setError("Error unexpected, try again later");
-    }
+    await logInApi.request({
+      email: loginForm.email,
+      password: loginForm.password,
+    });
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +31,17 @@ const Login: React.FC = () => {
       [event.target.name]: event.target.value,
     }));
   };
+
+  useEffect(() => {
+    if (logInApi.data) {
+      setCookie("token", logInApi.data.token, {
+        path: "/",
+        expires: new Date(logInApi.data.expiresAt),
+      });
+
+      router.push("/");
+    }
+  }, [logInApi.data, router, setCookie]);
 
   return (
     <Box margin={6}>
@@ -93,10 +90,14 @@ const Login: React.FC = () => {
           }}
           bg="gray.50"
         />
-        <Text textAlign="center" color="red" fontSize="10pt">
-          {error}
-        </Text>
-        <Button width="100%" height="36px" mt={2} mb={2} type="submit">
+        <Button
+          isLoading={logInApi.loading}
+          width="100%"
+          height="36px"
+          mt={2}
+          mb={2}
+          type="submit"
+        >
           Log In
         </Button>
         <Flex justifyContent="center" mb={2}>
