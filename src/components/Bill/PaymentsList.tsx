@@ -16,6 +16,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FiEdit, FiPlusSquare, FiTrash2 } from "react-icons/fi";
@@ -30,6 +31,7 @@ const PaymentsList: React.FC<PaymentsListProps> = ({ billId }) => {
   const resetModal = useResetRecoilState(modalState);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [cookies] = useCookies(["token"]);
+  const t = useTranslations("component.bill.paymentsList");
   const paymentsListApi = useApi(PaymentService.getList);
   const createPaymentApi = useApi(PaymentService.create);
   const updatePaymentApi = useApi(PaymentService.update);
@@ -94,7 +96,7 @@ const PaymentsList: React.FC<PaymentsListProps> = ({ billId }) => {
     <>
       <Flex justifyContent="center" marginTop={4}>
         <Text>
-          <b>Payments</b>
+          <b>{t("title")}</b>
         </Text>
       </Flex>
 
@@ -102,7 +104,7 @@ const PaymentsList: React.FC<PaymentsListProps> = ({ billId }) => {
         <Table size="sm">
           <Thead>
             <Tr>
-              <Th>Reference Date</Th>
+              <Th>{t("table.referenceDate")}</Th>
               <Th>Paid At</Th>
               <Th>Value</Th>
               <Th width="15%"></Th>

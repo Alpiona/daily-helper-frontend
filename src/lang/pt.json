@@ -1,0 +1,43 @@
+{
+  "api": {
+    "error": {
+      "E_ROW_NOT_FOUND": "",
+      "E_UNAUTHORIZED_ACCESS": "",
+      "E_VALIDATION_FAILURE": "",
+      "E_INVALID_CREDENTIALS": "Opa, não deu boa!",
+      "E_INTERNAL_ERROR":""
+    }
+  },
+
+  "page": {
+    "index": {
+      "title": "Bem-vindo a Organezee!"
+    },
+    "bills": {
+      "id":{
+
+      },
+      "index": {
+
+      }
+    }
+  },
+
+  "modal": {
+    "bill-create": {
+      
+    },
+    "bill-edit": {
+
+    },
+    "payment-create": {
+
+    },
+    "payment-delete": {
+
+    },
+    "payment-edit": {
+
+    }
+  }
+}

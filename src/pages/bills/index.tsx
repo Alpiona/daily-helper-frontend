@@ -4,6 +4,8 @@ import { useApi } from "@/hooks/useApi";
 import { BillService } from "@/services/Bill/BillService";
 import { Bill } from "@/services/Bill/BillTypes";
 import { Button, Flex, Text } from "@chakra-ui/react";
+import { GetStaticPropsContext } from "next";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useRecoilState, useResetRecoilState } from "recoil";
@@ -15,6 +17,7 @@ const BillsPage: React.FC = () => {
   const [cookies] = useCookies(["token"]);
   const getBillsApi = useApi(BillService.getList);
   const createBillApi = useApi(BillService.create);
+  const t = useTranslations("page.bills.index");
 
   useEffect(() => {
     if (cookies.token) {
@@ -30,10 +33,7 @@ const BillsPage: React.FC = () => {
 
   useEffect(() => {
     if (createBillApi.data) {
-      console.log("useEffect", bills, createBillApi.data);
-
       setBills([...bills, createBillApi.data]);
-      console.log("passou do setBills", bills);
     }
   }, [createBillApi.data]);
 
@@ -47,7 +47,7 @@ const BillsPage: React.FC = () => {
     <>
       <Flex justifyContent="center" margin={3}>
         <Text>
-          <b>Bills Control</b>
+          <b>{t("title")}</b>
         </Text>
       </Flex>
       <BillsTable bills={bills} />
@@ -72,3 +72,13 @@ const BillsPage: React.FC = () => {
 };
 
 export default BillsPage;
+
+export async function getStaticProps(context: GetStaticPropsContext) {
+  return {
+    props: {
+      // You can get the messages from anywhere you like. The recommended pattern
+      // is to put them in JSON files separated by locale (e.g. `en.json`).
+      messages: (await import(`../../lang/${context.locale}.json`)).default,
+    },
+  };
+}

@@ -1,8 +1,6 @@
 import { Bill } from "@/services/Bill/BillTypes";
 import { Button, Input } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useCookies } from "react-cookie";
 
 type CreateBillProps = {
   handleCreateBill: (newBill: Omit<Bill, "id" | "monthPaid">) => void;
@@ -14,8 +12,6 @@ const CreateBill: React.FC<CreateBillProps> = ({ handleCreateBill }) => {
     description: undefined,
     dueDay: 0,
   });
-  const router = useRouter();
-  const [cookies, , removeCookie] = useCookies(["token"]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

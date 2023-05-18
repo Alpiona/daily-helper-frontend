@@ -12,6 +12,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { useTranslations } from "next-intl";
 import { default as NextLink } from "next/link";
 import React from "react";
 import { FiCheck, FiClock, FiX } from "react-icons/fi";
@@ -21,6 +22,8 @@ type BillsTableProps = {
 };
 
 const BillsTable: React.FC<BillsTableProps> = ({ bills }) => {
+  const t = useTranslations("component.bill.billsTable");
+
   const renderPaidRow = (dueDay: number, paid: boolean) => {
     const today = new Date().getDate();
     const type = paid ? "success" : today <= dueDay ? "warning" : "problem";
@@ -60,12 +63,12 @@ const BillsTable: React.FC<BillsTableProps> = ({ bills }) => {
       <Table size="sm">
         <Thead>
           <Tr>
-            <Th width="50%">Name</Th>
+            <Th width="50%">{t("table.name")}</Th>
             <Th width="25%" textAlign="center">
-              Due Day
+              {t("table.dueDay")}
             </Th>
             <Th width="25%" textAlign="center">
-              Paid
+              {t("table.paid")}
             </Th>
           </Tr>
         </Thead>

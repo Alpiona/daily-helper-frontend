@@ -1,5 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import { AxiosResponse } from "axios";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
@@ -17,12 +18,12 @@ export const useApi = <
   const [, , removeCookie] = useCookies(["token"]);
   const toast = useToast();
   const router = useRouter();
+  const t = useTranslations("api");
 
   const request = async (...args: Parameters<typeof apiFunc>) => {
     setLoading(true);
     try {
       const result = await apiFunc(...args);
-      console.log(result);
       setData(result.data.data);
     } catch (err: any) {
       if (err?.response?.data?.errors[0]?.message === "Access unauthorized") {
@@ -32,7 +33,8 @@ export const useApi = <
 
       toast({
         title: "Error",
-        description: err.response.data.errors[0].message,
+        // description: err.response.data.errors[0].message,
+        description: t(`error.${err.response.data.errors[0].code}`),
         status: "error",
         duration: 9000,
         isClosable: true,

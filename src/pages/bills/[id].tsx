@@ -4,6 +4,8 @@ import { useApi } from "@/hooks/useApi";
 import { BillService } from "@/services/Bill/BillService";
 import { Bill } from "@/services/Bill/BillTypes";
 import { Button, Divider, Flex, Icon, Spacer, Text } from "@chakra-ui/react";
+import { GetStaticPropsContext } from "next";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
@@ -20,6 +22,7 @@ const BillDetails: React.FC = () => {
   const editBillApi = useApi(BillService.update);
   const deleteBillApi = useApi(BillService.deleteOne);
   const getBillApi = useApi(BillService.getOne);
+  const t = useTranslations("page.bills.id");
 
   const handleEditBill = async (updatedBill: Bill) => {
     await editBillApi.request(
@@ -54,28 +57,28 @@ const BillDetails: React.FC = () => {
     <>
       <Flex justifyContent="center" margin={3}>
         <Text>
-          <b>Bill Details</b>
+          <b>{t("title")}</b>
         </Text>
       </Flex>
       {bill && (
         <Flex marginY={3} marginX={5} fontSize={15} flexWrap="wrap">
           <Flex width="150px" justifyContent="start">
             <Text>
-              <b>Name:</b>
+              <b>{t("name")}</b>
             </Text>
             <Text>{bill.name}</Text>
           </Flex>
           <Spacer />
           <Flex width="100px" justifyContent="start">
             <Text>
-              <b>Due Day:</b>
+              <b>{t("dueDay")}</b>
             </Text>
             <Text>{bill.dueDay < 10 ? `0${bill.dueDay}` : bill.dueDay}</Text>
           </Flex>
           <Spacer />
           <Flex width="300px" justifyContent="start">
             <Text>
-              <b>Description:</b>
+              <b>{t("description")}</b>
             </Text>
             <Text>{bill.description}</Text>
           </Flex>
@@ -117,3 +120,18 @@ const BillDetails: React.FC = () => {
 };
 
 export default BillDetails;
+
+export async function getStaticProps(context: GetStaticPropsContext) {
+  return {
+    props: {
+      messages: (await import(`../../lang/${context.locale}.json`)).default,
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+}

@@ -1,12 +1,13 @@
 import { useApi } from "@/hooks/useApi";
 import { UserService } from "@/services/User/UserService";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import { GetStaticPropsContext } from "next";
 import { default as NextLink } from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-const Login: React.FC = () => {
+export default function Login() {
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
@@ -130,6 +131,12 @@ const Login: React.FC = () => {
       </form>
     </Box>
   );
-};
+}
 
-export default Login;
+export async function getStaticProps(context: GetStaticPropsContext) {
+  return {
+    props: {
+      messages: (await import(`../../lang/${context.locale}.json`)).default,
+    },
+  };
+}

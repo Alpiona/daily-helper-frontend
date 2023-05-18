@@ -1,0 +1,66 @@
+{
+  "api": {
+    "error": {
+      "E_ROW_NOT_FOUND": "Resource not found",
+      "E_UNAUTHORIZED_ACCESS": "Access unauthorized",
+      "E_VALIDATION_FAILURE": "Invalid data",
+      "E_INVALID_CREDENTIALS": "Invalid credentials",
+      "E_INTERNAL_ERROR":"Internal error! Please, try again later"
+    }
+  },
+
+  "component": {
+    "bill": {
+      "billsTable": {
+        "table": {
+          "name": "Name",
+          "dueDay": "Due Day",
+          "paid": "Paid"
+        } 
+      },
+      "paymentsList": {
+        "title": "Payments",
+        "table": {
+          "referenceDate": "Reference Date",
+          "paidAt": "Paid At",
+          "value": "Value"
+        } 
+      }
+    }
+  },
+
+  "page": {
+    "index": {
+      "title": "Welcome to Organezee!"
+    },
+    "bills": {
+      "id":{
+        "title": "Bill",
+        "name": "Name:",
+        "dueDay": "Due Day:",
+        "description": "Description:"
+      },
+      "index": {
+        "title": "Bills Control"
+      }
+    }
+  },
+
+  "modal": {
+    "bill-create": {
+      
+    },
+    "bill-edit": {
+
+    },
+    "payment-create": {
+
+    },
+    "payment-delete": {
+
+    },
+    "payment-edit": {
+
+    }
+  }
+}
