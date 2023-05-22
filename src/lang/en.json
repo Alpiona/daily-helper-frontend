@@ -26,12 +26,76 @@
           "value": "Value"
         } 
       }
+    },
+    "navbar": {
+      "auth-buttons": {
+        "log-out-button": "Log Out",
+        "log-in-button": "Log In",
+        "sign-up-button": "Sign Up"
+      }
     }
   },
 
   "page": {
     "index": {
       "title": "Welcome to Organezee!"
+    },
+    "auth":{
+      "log-in": {
+        "email-placeholder": "e-mail",
+        "password-placeholder": "password",
+        "confirm-button": "Log In",
+        "forgot-password-text": "Forgot your password?",
+        "reset-password-button": "Reset Password",
+        "new-user-text": "New here?",
+        "sign-up-button": "Sign Up"
+      },
+      "reset-password":{
+        "success-toast": {
+          "title": "Password updated",
+          "description": "You can log in with the new password"
+        },
+        "password-error-toast":{
+          "title": "Invalid data",
+          "description": "Passwords do not match"
+        },
+        "token-error-toast":{
+          "title": "Invalid token",
+          "description": "Invalid request! Try again using the link in the e-mail"
+        },
+        "password-placeholder": "password",
+        "confirmPassword-placeholder": "confirm password",
+        "confirm-button": "Reset Password"
+      },
+      "send-reset-password": {
+        "success-toast": {
+          "title": "Password reset request successful",
+          "description": "Confirmation email has been sent"
+        },
+        "email-placeholder": "e-mail",
+        "confirmation-button": "Reset Password"
+      },
+      "sign-up": {
+        "success-toast": {
+          "title": "Successful registration request",
+          "description": "Confirmation email has been sent"
+        },
+        "password-error-toast":{
+          "title": "Invalid data",
+          "description": "Passwords do not match"
+        },
+        "email-placeholder": "e-mail",
+        "password-placeholder": "password",
+        "confirm-password-placeholder": "confirm password",
+        "confirmation-button": "Sign Up",
+        "log-in-text": "Already registered?",
+        "log-in-button": "Log In"
+      },
+      "sign-up-confirmation": {
+        "success-text": "Welcome to Organezee! Registration was successful",
+        "request-error-text": "Internal error! Please, try again later",
+        "token-error-text": "Invalid request! Try again using the link in the e-mail"
+      }
     },
     "bills": {
       "id":{
@@ -48,19 +112,37 @@
 
   "modal": {
     "bill-create": {
-      
+      "name-placeholder": "name",
+      "description-placeholder": "description",
+      "dueDay-placeholder": "due day",
+      "button-confirmation": "Create Bill"
     },
     "bill-edit": {
-
+      "name-placeholder": "name",
+      "description-placeholder": "description",
+      "dueDay-placeholder": "due day",
+      "button-confirmation": "Edit Bill"
     },
     "payment-create": {
-
+      "paidAt-text": "Paid at:",
+      "paidAt-placeholder": "paid at",
+      "referenceMonth-text": "Reference Month:",
+      "referenceMonth-placeholder": "reference month",
+      "value-text": "Value:",
+      "value-placeholder": "value",
+      "confirm-button": "Create Payment"
     },
     "payment-delete": {
-
+      "modal-text": "Deleting the bill will also delete all payments on it, and it will not be possible to recover the data. Do you still want to delete?"
     },
     "payment-edit": {
-
+      "paidAt-text": "Paid at:",
+      "paidAt-placeholder": "paid at",
+      "referenceMonth-text": "Reference Month:",
+      "referenceMonth-placeholder": "reference month",
+      "value-text": "Value:",
+      "value-placeholder": "value",
+      "confirm-button": "Edit Payment"
     }
   }
 }

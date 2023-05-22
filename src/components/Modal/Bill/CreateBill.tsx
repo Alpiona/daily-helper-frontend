@@ -1,5 +1,6 @@
 import { Bill } from "@/services/Bill/BillTypes";
 import { Button, Input } from "@chakra-ui/react";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 type CreateBillProps = {
@@ -12,6 +13,7 @@ const CreateBill: React.FC<CreateBillProps> = ({ handleCreateBill }) => {
     description: undefined,
     dueDay: 0,
   });
+  const t = useTranslations("modal.bill-create");
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,7 +38,7 @@ const CreateBill: React.FC<CreateBillProps> = ({ handleCreateBill }) => {
         <Input
           required
           name="name"
-          placeholder="name"
+          placeholder={t("name-placeholder")}
           type="text"
           mb={2}
           onChange={onChange}
@@ -57,7 +59,7 @@ const CreateBill: React.FC<CreateBillProps> = ({ handleCreateBill }) => {
         />
         <Input
           name="description"
-          placeholder="description"
+          placeholder={t("description-placeholder")}
           type="text"
           mb={2}
           onChange={onChange}
@@ -78,7 +80,7 @@ const CreateBill: React.FC<CreateBillProps> = ({ handleCreateBill }) => {
         />
         <Input
           name="dueDay"
-          placeholder="due day"
+          placeholder={t("dueDay-placeholder")}
           type="number"
           min="1"
           max="31"
@@ -100,7 +102,7 @@ const CreateBill: React.FC<CreateBillProps> = ({ handleCreateBill }) => {
           bg="gray.50"
         />
         <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-          Create Bill
+          {t("button-confirmation")}
         </Button>
       </form>
     </>

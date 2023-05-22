@@ -1,5 +1,7 @@
+import { useApi } from "@/hooks/useApi";
 import { UserService } from "@/services/User/UserService";
 import { Box, Button, Input, useToast } from "@chakra-ui/react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -11,67 +13,54 @@ const ResetPassword: React.FC = () => {
   const router = useRouter();
   const toast = useToast();
   const token = router.query.token as string | undefined;
+  const resetPasswordApi = useApi(UserService.resetPassword);
+  const t = useTranslations("page.auth.reset-password");
 
   useEffect(() => {
-    if (!token && router.isReady) {
+    if (resetPasswordApi.requestMade && !resetPasswordApi.loading) {
       toast({
-        title: "Error",
-        description: "Please, make another reset password request",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
-  }, [token, router.isReady, toast]);
-
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!token) {
-      toast({
-        title: "Error",
-        description: "Please, make another reset password request",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    } else if (signUpForm.password !== signUpForm.confirmPassword) {
-      toast({
-        title: "Invalid data",
-        description: "Confirm your password",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    const { errors } = await UserService.resetPassword(
-      {
-        password: signUpForm.password,
-        passwordConfirmation: signUpForm.confirmPassword,
-      },
-      token
-    );
-
-    if (errors && errors[0]) {
-      toast({
-        title: "Error",
-        description: errors[0].message,
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Password updated",
-        description: "You can log in with the new password",
+        title: t("success-toast.title"),
+        description: t("success-toast.description"),
         status: "success",
         duration: 9000,
         isClosable: true,
       });
     }
+  }, [resetPasswordApi.requestMade, resetPasswordApi.loading]);
+
+  useEffect(() => {
+    if (!token) {
+      toast({
+        title: t("token-error-toast.title"),
+        description: t("token-error-toast.description"),
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [router.isReady]);
+
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (signUpForm.password !== signUpForm.confirmPassword) {
+      toast({
+        title: t("password-error-toast.title"),
+        description: t("password-error-toast.description"),
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    await resetPasswordApi.request(
+      {
+        password: signUpForm.password,
+        passwordConfirmation: signUpForm.confirmPassword,
+      },
+      token!
+    );
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,7 +76,7 @@ const ResetPassword: React.FC = () => {
         <Input
           required
           name="password"
-          placeholder="password"
+          placeholder={t("password-placeholder")}
           type="password"
           mb={2}
           onChange={onChange}
@@ -109,7 +98,7 @@ const ResetPassword: React.FC = () => {
         <Input
           required
           name="confirmPassword"
-          placeholder="confirm password"
+          placeholder={t("confirmPassword-placeholder")}
           type="password"
           mb={2}
           onChange={onChange}
@@ -129,7 +118,7 @@ const ResetPassword: React.FC = () => {
           bg="gray.50"
         />
         <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-          Reset Password
+          {t("confirm-button")}
         </Button>
       </form>
     </Box>

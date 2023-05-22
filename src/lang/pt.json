@@ -1,43 +1,148 @@
 {
   "api": {
     "error": {
-      "E_ROW_NOT_FOUND": "",
-      "E_UNAUTHORIZED_ACCESS": "",
-      "E_VALIDATION_FAILURE": "",
-      "E_INVALID_CREDENTIALS": "Opa, não deu boa!",
-      "E_INTERNAL_ERROR":""
+      "E_ROW_NOT_FOUND": "Recurso não encontrado",
+      "E_UNAUTHORIZED_ACCESS": "Acesso não autorizado",
+      "E_VALIDATION_FAILURE": "Dado inválido",
+      "E_INVALID_CREDENTIALS": "Credenciais inválidas",
+      "E_INTERNAL_ERROR":"Erro interno! Por favor, tente novamente mais tarde!"
+    }
+  },
+
+  "component": {
+    "bill": {
+      "billsTable": {
+        "table": {
+          "name": "Nome",
+          "dueDay": "Dia de Vencimento",
+          "paid": "Pago"
+        } 
+      },
+      "paymentsList": {
+        "title": "Pagamentos",
+        "table": {
+          "referenceDate": "Data de Referência",
+          "paidAt": "Pago em",
+          "value": "Valor"
+        } 
+      }
+    },
+    "navbar": {
+      "auth-buttons": {
+        "log-out-button": "Encerrar Sessão",
+        "log-in-button": "Iniciar Sessão",
+        "sign-up-button": "Registrar-se"
+      }
     }
   },
 
   "page": {
     "index": {
-      "title": "Bem-vindo a Organezee!"
+      "title": "Bem-vindo ao Organezee!"
+    },
+    "auth":{
+      "log-in": {
+        "email-placeholder": "e-mail",
+        "password-placeholder": "senha",
+        "confirm-button": "Iniciar Sessão",
+        "forgot-password-text": "Esqueceu sua senha?",
+        "reset-password-button": "Redefinir Senha",
+        "new-user-text": "Novo aqui?",
+        "sign-up-button": "Registrar"
+      },
+      "reset-password":{
+        "success-toast": {
+          "title": "Senha atualizada",
+          "description": "Você já pode iniciar uma sessão com a nova senha"
+        },
+        "password-error-toast":{
+          "title": "Dado inválido",
+          "description": "As senhas estão diferentes"
+        },
+        "token-error-toast":{
+          "title": "Requisição inválida",
+          "description": "Tente novamente utilizando o link enviado por e-mail"
+        },
+        "password-placeholder": "senha",
+        "confirmPassword-placeholder": "confirme a senha",
+        "confirm-button": "Redefinir Senha"
+      },
+      "send-reset-password": {
+        "success-toast": {
+          "title": "Requisição de redefinição de senha feita com sucesso",
+          "description": "Foi enviado um e-mail de confirmação"
+        },
+        "email-placeholder": "e-mail",
+        "confirmation-button": "Requisitar redefinição de senha"
+      },
+      "sign-up": {
+        "success-toast": {
+          "title": "Requisição de registro feita com sucesso",
+          "description": "Foi enviado um e-mail de confirmação"
+        },
+        "password-error-toast":{
+          "title": "Dado inválido",
+          "description": "As senhas estão diferentes"
+        },
+        "email-placeholder": "e-mail",
+        "password-placeholder": "senha",
+        "confirm-password-placeholder": "confirmação de senha",
+        "confirmation-button": "Registrar-se",
+        "log-in-text": "Já é registrado?",
+        "log-in-button": "Iniciar Sessão"
+      },
+      "sign-up-confirmation": {
+        "success-text": "Bem-vindo ao Organezee! Registro feito com sucesso",
+        "request-error-text": "Erro interno! Por favor, tente novamente mais tarde",
+        "token-error-text": "Requisição inválida! Tente novamente utilizando o link enviado no e-mail"
+      }
     },
     "bills": {
       "id":{
-
+        "title": "Dados da Conta",
+        "name": "Nome:",
+        "dueDay": "Dia de Vencimento:",
+        "description": "Descrição:"
       },
       "index": {
-
+        "title": "Controle de Contas"
       }
     }
   },
 
   "modal": {
     "bill-create": {
-      
+      "name-placeholder": "nome",
+      "description-placeholder": "descrição",
+      "dueDay-placeholder": "dia de vencimento",
+      "button-confirmation": "Criar Conta"
     },
     "bill-edit": {
-
+      "name-placeholder": "nome",
+      "description-placeholder": "descrição",
+      "dueDay-placeholder": "dia de vencimento",
+      "button-confirmation": "Editar Conta"
     },
     "payment-create": {
-
+      "paidAt-text": "Pago em:",
+      "paidAt-placeholder": "pago em",
+      "referenceMonth-text": "Mês de Referência:",
+      "referenceMonth-placeholder": "mês de referência",
+      "value-text": "Valor:",
+      "value-placeholder": "valor",
+      "confirm-button": "Criar Pagamento"
     },
     "payment-delete": {
-
+      "modal-text": "Deletar a conta também irá deletar todos os pagamentos dele, e não será possível recuperar os dados. Ainda deseja deletar?"
     },
     "payment-edit": {
-
+      "paidAt-text": "Pago em:",
+      "paidAt-placeholder": "pago em",
+      "referenceMonth-text": "Mês de Referência:",
+      "referenceMonth-placeholder": "mês de referência",
+      "value-text": "Valor:",
+      "value-placeholder": "valor",
+      "confirm-button": "Editar Pagamento"
     }
   }
 }

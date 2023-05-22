@@ -1,6 +1,7 @@
 import { Payment } from "@/services/Payment/PaymentTypes";
 import { Button, Input, Text, useToast } from "@chakra-ui/react";
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 type CreatePaymentProps = {
@@ -20,6 +21,7 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({
   });
   const toast = useToast();
   const actualMonthYear = format(new Date(), "MM-yyyy");
+  const t = useTranslations("modal.payment-create");
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -54,11 +56,11 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({
     <>
       <form onSubmit={onSubmit}>
         <Text fontSize={14} as="b">
-          Paid at:
+          {t("text-paidAt")}
         </Text>
         <Input
           name="paidAt"
-          placeholder="paid at"
+          placeholder={t("paidAt-placeholder")}
           type="date"
           mb={2}
           onChange={onChange}
@@ -78,13 +80,13 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({
           bg="gray.50"
         />
         <Text fontSize={14} as="b">
-          Reference Month:
+          {t("referenceMonth-text")}
         </Text>
         <Input
           required
           defaultValue={actualMonthYear}
           name="referenceDate"
-          placeholder="reference date"
+          placeholder={t("referenceMonth-placeholder")}
           type="month"
           mb={2}
           onChange={onChange}
@@ -105,11 +107,11 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({
           bg="gray.50"
         />
         <Text fontSize={14} as="b">
-          Value:
+          {t("value-text")}
         </Text>
         <Input
           name="value"
-          placeholder="value"
+          placeholder={t("value-placeholder")}
           defaultValue={0}
           type="number"
           min="0.00"
@@ -133,7 +135,7 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({
           bg="gray.50"
         />
         <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-          Create Payment
+          {t("confirm-button")}
         </Button>
       </form>
     </>

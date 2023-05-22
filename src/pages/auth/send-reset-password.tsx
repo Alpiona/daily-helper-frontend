@@ -1,38 +1,36 @@
+import { useApi } from "@/hooks/useApi";
 import { UserService } from "@/services/User/UserService";
 import { Box, Button, Input, useToast } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { GetStaticPropsContext } from "next";
+import { useTranslations } from "next-intl";
+import React, { useEffect, useState } from "react";
 
 const SendResetPassword: React.FC = () => {
   const [signUpForm, setSignUpForm] = useState({
     email: "",
   });
   const toast = useToast();
+  const sendResetPasswordApi = useApi(UserService.sendResetPassword);
+  const t = useTranslations("page.auth.send-reset-password");
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const { errors } = await UserService.sendResetPassword({
-      email: signUpForm.email,
-    });
-
-    if (errors && errors[0]) {
+  useEffect(() => {
+    if (sendResetPasswordApi.requestMade && !sendResetPasswordApi.loading) {
       toast({
-        title: "Failure when trying to request reset password",
-        description: errors[0].message,
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Password reset request successful",
-        description: "Confirmation email has been sent",
+        title: t("success-toast.title"),
+        description: t("success-toast.description"),
         status: "success",
         duration: 9000,
         isClosable: true,
       });
-      // router.push("/auth/log-in");
     }
+  }, [sendResetPasswordApi.requestMade]);
+
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    await sendResetPasswordApi.request({
+      email: signUpForm.email,
+    });
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +46,7 @@ const SendResetPassword: React.FC = () => {
         <Input
           required
           name="email"
-          placeholder="email"
+          placeholder={t("email-placeholder")}
           type="email"
           mb={2}
           onChange={onChange}
@@ -68,7 +66,7 @@ const SendResetPassword: React.FC = () => {
           bg="gray.50"
         />
         <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-          Reset Password
+          {t("confirmation-button")}
         </Button>
       </form>
     </Box>
@@ -76,3 +74,11 @@ const SendResetPassword: React.FC = () => {
 };
 
 export default SendResetPassword;
+
+export async function getStaticProps(context: GetStaticPropsContext) {
+  return {
+    props: {
+      messages: (await import(`../../lang/${context.locale}.json`)).default,
+    },
+  };
+}

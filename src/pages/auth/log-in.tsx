@@ -2,6 +2,7 @@ import { useApi } from "@/hooks/useApi";
 import { UserService } from "@/services/User/UserService";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import { GetStaticPropsContext } from "next";
+import { useTranslations } from "next-intl";
 import { default as NextLink } from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -14,8 +15,8 @@ export default function Login() {
   });
   const router = useRouter();
   const [, setCookie] = useCookies(["token"]);
-
   const logInApi = useApi(UserService.logIn);
+  const t = useTranslations("page.auth.log-in");
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,7 +43,7 @@ export default function Login() {
 
       router.push("/");
     }
-  }, [logInApi.data, router, setCookie]);
+  }, [logInApi.data]);
 
   return (
     <Box margin={6}>
@@ -50,7 +51,7 @@ export default function Login() {
         <Input
           required
           name="email"
-          placeholder="email"
+          placeholder={t("email-placeholder")}
           type="email"
           mb={2}
           onChange={onChange}
@@ -72,7 +73,7 @@ export default function Login() {
         <Input
           required
           name="password"
-          placeholder="password"
+          placeholder={t("password-placeholder")}
           type="password"
           mb={2}
           onChange={onChange}
@@ -99,11 +100,11 @@ export default function Login() {
           mb={2}
           type="submit"
         >
-          Log In
+          {t("confirm-button")}
         </Button>
         <Flex justifyContent="center" mb={2}>
           <Text fontSize="9pt" mr={1}>
-            Forgot your password?
+            {t("forgot-password-text")}
           </Text>
           <Text
             as={NextLink}
@@ -113,11 +114,11 @@ export default function Login() {
             fontWeight={700}
             cursor="pointer"
           >
-            Reset Password
+            {t("reset-password-button")}
           </Text>
         </Flex>
         <Flex fontSize="9pt" justifyContent="center">
-          <Text mr={1}>New here?</Text>
+          <Text mr={1}>{t("new-user-text")}</Text>
           <Text
             as={NextLink}
             href="/auth/sign-up"
@@ -125,7 +126,7 @@ export default function Login() {
             fontWeight={700}
             cursor="pointer"
           >
-            Sign Up
+            {t("sign-up-button")}
           </Text>
         </Flex>
       </form>

@@ -1,10 +1,11 @@
-import { Bill } from "@/services/BillTypes";
-import { Button, Input, Text } from "@chakra-ui/react";
+import { Bill } from "@/services/Bill/BillTypes";
+import { Button, Input } from "@chakra-ui/react";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 type EditBillProps = {
   data: Bill;
-  handleEditBill: (bill: Bill) => void;
+  handleEditBill: (bill: Omit<Bill, "monthPaid">) => void;
 };
 
 const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
@@ -13,7 +14,7 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
     description: data.description,
     dueDay: data.dueDay,
   });
-  const [error, setError] = useState("");
+  const t = useTranslations("modal.bill-create");
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,7 +40,7 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
         <Input
           required
           name="name"
-          placeholder="name"
+          placeholder={t("name-placeholder")}
           type="text"
           defaultValue={data.name}
           mb={2}
@@ -62,7 +63,7 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
         <Input
           required
           name="description"
-          placeholder="description"
+          placeholder={t("description-placeholder")}
           type="text"
           defaultValue={data.description}
           mb={2}
@@ -84,7 +85,7 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
         />
         <Input
           name="dueDay"
-          placeholder="due day"
+          placeholder={t("dueDay-placeholder")}
           type="number"
           min="1"
           max="31"
@@ -106,11 +107,8 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
           }}
           bg="gray.50"
         />
-        <Text textAlign="center" color="red" fontSize="10pt">
-          {error}
-        </Text>
         <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-          Edit Bill
+          {t("button-confirmation")}
         </Button>
       </form>
     </>

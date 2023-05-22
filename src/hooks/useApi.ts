@@ -15,6 +15,7 @@ export const useApi = <
 ) => {
   const [data, setData] = useState<ResponseData<T>>();
   const [loading, setLoading] = useState(false);
+  const [requestMade, setRequestMade] = useState(false);
   const [, , removeCookie] = useCookies(["token"]);
   const toast = useToast();
   const router = useRouter();
@@ -22,6 +23,7 @@ export const useApi = <
 
   const request = async (...args: Parameters<typeof apiFunc>) => {
     setLoading(true);
+    setRequestMade(true);
     try {
       const result = await apiFunc(...args);
       setData(result.data.data);
@@ -33,7 +35,6 @@ export const useApi = <
 
       toast({
         title: "Error",
-        // description: err.response.data.errors[0].message,
         description: t(`error.${err.response.data.errors[0].code}`),
         status: "error",
         duration: 9000,
@@ -48,5 +49,6 @@ export const useApi = <
     data,
     loading,
     request,
+    requestMade,
   };
 };

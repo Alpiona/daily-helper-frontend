@@ -1,39 +1,38 @@
+import { useApi } from "@/hooks/useApi";
 import { UserService } from "@/services/User/UserService";
 import { Box, Flex, Text } from "@chakra-ui/react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 const SignUpConfirmation: React.FC = () => {
   const [mainText, setMainText] = useState("");
+  const [isSuccess, setIsSuccess] = useState(true);
   const router = useRouter();
   const token = router.query.token as string | undefined;
-  const [isSuccess, setIsSuccess] = useState(true);
+  const activateApi = useApi(UserService.activate);
+  const t = useTranslations("page.auth.sign-up-confirmation");
 
   useEffect(() => {
-    if (!token) {
+    if (token) {
+      const fetchApi = async () => {
+        await activateApi.request({}, token);
+      };
+
+      fetchApi()
+        .then(() => {
+          setIsSuccess(true);
+          setMainText(t("success-text"));
+        })
+        .catch(() => {
+          setIsSuccess(false);
+          setMainText(t("request-error-text"));
+        });
+    } else {
       setIsSuccess(false);
-      setMainText("Invalid registration URL! Please try sign up again");
-      return;
+      setMainText(t("token-error-text"));
     }
-
-    const fetchUserActivation = async () => {
-      const { errors } = await UserService.activate(token);
-
-      if (errors && errors[0]) {
-        throw errors;
-      }
-    };
-
-    fetchUserActivation()
-      .then(() => {
-        setIsSuccess(true);
-        setMainText("Welcome to Organezee! Registration was successful");
-      })
-      .catch((errors) => {
-        setIsSuccess(false);
-        setMainText(errors[0].message);
-      });
-  }, [token]);
+  }, [router.isReady]);
 
   return (
     <Box margin={6}>

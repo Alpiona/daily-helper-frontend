@@ -1,5 +1,8 @@
+import { useApi } from "@/hooks/useApi";
 import { UserService } from "@/services/User/UserService";
 import { Box, Button, Flex, Input, Text, useToast } from "@chakra-ui/react";
+import { GetStaticPropsContext } from "next";
+import { useTranslations } from "next-intl";
 import { default as NextLink } from "next/link";
 import React, { useState } from "react";
 
@@ -9,18 +12,17 @@ const SignUp: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState("");
   const toast = useToast();
+  const signUpApi = useApi(UserService.signUp);
+  const t = useTranslations("page.auth.sign-up");
 
-  //Firebase logic
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("");
 
     if (signUpForm.password !== signUpForm.confirmPassword) {
       toast({
-        title: "Invalid data",
-        description: "Passwords do not match",
+        title: t("password-error-toast.title"),
+        description: t("password-error-toast.description"),
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -28,30 +30,19 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    const { errors } = await UserService.signUp({
+    await signUpApi.request({
       email: signUpForm.email,
       password: signUpForm.password,
       passwordConfirmation: signUpForm.confirmPassword,
     });
 
-    if (errors && errors[0]) {
-      toast({
-        title: "Fail to sign up",
-        description: errors[0].message,
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      setError(errors[0].message);
-    } else {
-      toast({
-        title: "Sign up successfully",
-        description: "Confirmation email has been sent",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
+    toast({
+      title: t("success-toast.title"),
+      description: t("success-toast.description"),
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    });
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +58,7 @@ const SignUp: React.FC = () => {
         <Input
           required
           name="email"
-          placeholder="email"
+          placeholder={t("email-placeholder")}
           type="email"
           mb={2}
           onChange={onChange}
@@ -89,7 +80,7 @@ const SignUp: React.FC = () => {
         <Input
           required
           name="password"
-          placeholder="password"
+          placeholder={t("password-placeholder")}
           type="password"
           mb={2}
           onChange={onChange}
@@ -111,7 +102,7 @@ const SignUp: React.FC = () => {
         <Input
           required
           name="confirmPassword"
-          placeholder="confirm password"
+          placeholder={t("confirm-password-placeholder")}
           type="password"
           mb={2}
           onChange={onChange}
@@ -130,14 +121,11 @@ const SignUp: React.FC = () => {
           }}
           bg="gray.50"
         />
-        <Text textAlign="center" color="red" fontSize="10pt">
-          {error}
-        </Text>
         <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-          Sign Up
+          {t("confirmation-button")}
         </Button>
         <Flex fontSize="9pt" justifyContent="center">
-          <Text mr={1}>Already registered?</Text>
+          <Text mr={1}>{t("log-in-text")}</Text>
           <Text
             as={NextLink}
             href="/auth/log-in"
@@ -145,7 +133,7 @@ const SignUp: React.FC = () => {
             fontWeight={700}
             cursor="pointer"
           >
-            Log In
+            {t("log-in-button")}
           </Text>
         </Flex>
       </form>
@@ -154,3 +142,11 @@ const SignUp: React.FC = () => {
 };
 
 export default SignUp;
+
+export async function getStaticProps(context: GetStaticPropsContext) {
+  return {
+    props: {
+      messages: (await import(`../../lang/${context.locale}.json`)).default,
+    },
+  };
+}

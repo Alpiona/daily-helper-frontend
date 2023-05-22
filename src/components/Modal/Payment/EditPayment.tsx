@@ -1,4 +1,4 @@
-import { Payment } from "@/services/PaymentTypes";
+import { Payment } from "@/services/Payment/PaymentTypes";
 import {
   Button,
   Input,
@@ -7,8 +7,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
-import { useCookies } from "react-cookie";
 
 type EditPaymentProps = {
   handleEditPayment: (updatedPayment: Payment) => void;
@@ -19,30 +19,17 @@ const EditPayment: React.FC<EditPaymentProps> = ({
   handleEditPayment,
   data,
 }) => {
-  const [createPaymentForm, setCreatePaymentForm] = useState<
-    Omit<Payment, "id" | "billId">
-  >({
-    referenceDate: new Date().toISOString(),
-  });
-  const [error, setError] = useState("");
-  const [cookies, , removeCookie] = useCookies(["token"]);
-
-  const actualMonthYear = format(new Date(), "yyyy-MM");
+  const [editPaymentForm, setEditPaymentForm] = useState<Payment>(data);
+  const t = useTranslations("payment-edit");
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    handleEditPayment({
-      id: data.id,
-      billId: data.billId,
-      value: createPaymentForm.value,
-      referenceDate: createPaymentForm.referenceDate,
-      paidAt: createPaymentForm.paidAt,
-    });
+    handleEditPayment(editPaymentForm);
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCreatePaymentForm((prev) => ({
+    setEditPaymentForm((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
@@ -54,12 +41,12 @@ const EditPayment: React.FC<EditPaymentProps> = ({
         <InputGroup>
           <InputLeftAddon>
             <Text fontSize={15}>
-              <b>Paid At</b>
+              <b>{t("paidAt-text")}</b>
             </Text>
           </InputLeftAddon>
           <Input
             name="paidAt"
-            placeholder="paid at"
+            placeholder={t("paidAt-placeholder")}
             type="date"
             defaultValue={data.paidAt}
             mb={2}
@@ -83,14 +70,14 @@ const EditPayment: React.FC<EditPaymentProps> = ({
         <InputGroup>
           <InputLeftAddon>
             <Text fontSize={15}>
-              <b>Reference Month</b>
+              <b>{t("referenceMonth-text")}</b>
             </Text>
           </InputLeftAddon>
           <Input
             required
             defaultValue={format(new Date(data.referenceDate), "yyyy-MM")}
             name="referenceDate"
-            placeholder="reference date"
+            placeholder={t("referenceMonth-placeholder")}
             type="month"
             mb={2}
             onChange={onChange}
@@ -113,7 +100,7 @@ const EditPayment: React.FC<EditPaymentProps> = ({
         </InputGroup>
         <Input
           name="value"
-          placeholder="value"
+          placeholder={t("value-placeholder")}
           type="number"
           min="0.00"
           max="10000.00"
@@ -136,11 +123,8 @@ const EditPayment: React.FC<EditPaymentProps> = ({
           }}
           bg="gray.50"
         />
-        <Text textAlign="center" color="red" fontSize="10pt">
-          {error}
-        </Text>
         <Button width="100%" height="36px" mt={2} mb={2} type="submit">
-          Edit Payment
+          {t("confirm-button")}
         </Button>
       </form>
     </>
