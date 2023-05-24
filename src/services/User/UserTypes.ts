@@ -12,6 +12,7 @@ export type SignUpUserParams = {
   email: string;
   password: string;
   passwordConfirmation: string;
+  locale: string;
 };
 
 export type SendResetPasswordUserParams = {

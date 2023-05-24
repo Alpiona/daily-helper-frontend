@@ -2,25 +2,33 @@ import { Button, Flex, Link } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 type AuthButtonsProps = {};
 
 const AuthButtons: React.FC<AuthButtonsProps> = () => {
   const [cookies, , removeCookie] = useCookies(["token"]);
+  const [token, setToken] = useState<String>();
   const router = useRouter();
   const t = useTranslations("component.navbar.auth-buttons");
 
   const logout = async () => {
     removeCookie("token");
+    setToken("");
     router.push("/");
   };
+
+  useEffect(() => {
+    if (router.isReady) {
+      setToken(cookies.token);
+    }
+  }, [router.isReady]);
 
   return (
     <>
       <Flex align="center">
-        {cookies.token ? (
+        {token ? (
           <Button size="sm" mr={2} onClick={logout}>
             {t("log-out-button")}
           </Button>

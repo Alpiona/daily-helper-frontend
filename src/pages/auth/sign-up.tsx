@@ -4,6 +4,7 @@ import { Box, Button, Flex, Input, Text, useToast } from "@chakra-ui/react";
 import { GetStaticPropsContext } from "next";
 import { useTranslations } from "next-intl";
 import { default as NextLink } from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 const SignUp: React.FC = () => {
@@ -13,6 +14,7 @@ const SignUp: React.FC = () => {
     confirmPassword: "",
   });
   const toast = useToast();
+  const { locale } = useRouter();
   const signUpApi = useApi(UserService.signUp);
   const t = useTranslations("page.auth.sign-up");
 
@@ -34,15 +36,18 @@ const SignUp: React.FC = () => {
       email: signUpForm.email,
       password: signUpForm.password,
       passwordConfirmation: signUpForm.confirmPassword,
+      locale: locale || "en",
     });
 
-    toast({
-      title: t("success-toast.title"),
-      description: t("success-toast.description"),
-      status: "success",
-      duration: 9000,
-      isClosable: true,
-    });
+    if (!signUpApi.loading && signUpApi.success) {
+      toast({
+        title: t("success-toast.title"),
+        description: t("success-toast.description"),
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

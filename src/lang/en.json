@@ -5,7 +5,8 @@
       "E_UNAUTHORIZED_ACCESS": "Access unauthorized",
       "E_VALIDATION_FAILURE": "Invalid data",
       "E_INVALID_CREDENTIALS": "Invalid credentials",
-      "E_INTERNAL_ERROR":"Internal error! Please, try again later"
+      "E_INTERNAL_ERROR":"Internal error! Please, try again later",
+      "E_UNIQUE_EMAIL": "E-mail already in use"
     }
   },
 
@@ -33,6 +34,9 @@
         "log-in-button": "Log In",
         "sign-up-button": "Sign Up"
       }
+    },
+    "sideNavbar": {
+      "bills-title": "Bills"
     }
   },
 

@@ -33,6 +33,9 @@
         "log-in-button": "Iniciar Sessão",
         "sign-up-button": "Registrar-se"
       }
+    },
+    "sideNavbar": {
+      "bills-title": "Contas"
     }
   },
 
