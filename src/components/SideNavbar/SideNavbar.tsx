@@ -2,6 +2,7 @@ import { sideNavbarState } from "@/atoms/sideNavbarAtom";
 import { Box, Button, Icon, Link, Slide, Text, VStack } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { MdAttachMoney } from "react-icons/md";
 import { useRecoilState } from "recoil";
 
@@ -30,6 +31,7 @@ const menuOptions = [
 const SideNavbar: React.FC = () => {
   const [sideNavbar, setSideNavbar] = useRecoilState(sideNavbarState);
   const t = useTranslations("component.sideNavbar");
+  const { route } = useRouter();
 
   return (
     <Slide
@@ -58,27 +60,25 @@ const SideNavbar: React.FC = () => {
         }
       >
         <VStack spacing="10px" align="center">
-          {menuOptions.map((mo) => {
-            return (
-              <Link key={mo.id} as={NextLink} href={mo.redirect}>
-                <Button
-                  rounded={10}
-                  key={mo.id}
-                  flexDirection="column"
-                  mt={4}
-                  height={14}
-                  bgColor="gray.200"
-                  borderColor="gray.500"
-                  borderWidth={3}
-                >
-                  <Icon boxSize={7} as={mo.icon} color="black" />
-                  <Text as="b" width={20}>
-                    {t(mo.i18nTitle)}
-                  </Text>
-                </Button>
-              </Link>
-            );
-          })}
+          {menuOptions.map((mo) => (
+            <Link key={mo.id} as={NextLink} href={mo.redirect}>
+              <Button
+                rounded={10}
+                key={mo.id}
+                flexDirection="column"
+                mt={4}
+                height={14}
+                bgColor="gray.200"
+                borderColor="gray.500"
+                borderWidth={route === mo.redirect ? 3 : 0}
+              >
+                <Icon boxSize={7} as={mo.icon} color="black" />
+                <Text as="b" width={20}>
+                  {t(mo.i18nTitle)}
+                </Text>
+              </Button>
+            </Link>
+          ))}
         </VStack>
       </Box>
     </Slide>

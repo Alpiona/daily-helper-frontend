@@ -11,9 +11,11 @@ const logIn = (data: LogInParams) =>
   client.post<LogInData>("/api/users/log-in", data);
 
 const activate = async ({}, token: string) =>
-  client.patch("/api/users/activate", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  client.patch(
+    "/api/users/activate",
+    {},
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
 
 const signUp = async (data: SignUpUserParams) =>
   client.post("/api/users", data);

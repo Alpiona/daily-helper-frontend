@@ -1,10 +1,9 @@
 import { sideNavbarState } from "@/atoms/sideNavbarAtom";
-import { Flex, Icon } from "@chakra-ui/react";
+import { Flex, Icon, Spacer } from "@chakra-ui/react";
 import { ScriptProps } from "next/script";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FiAlignJustify } from "react-icons/fi";
-import { IoImageOutline } from "react-icons/io5";
 import { useRecoilState } from "recoil";
 import UserSpace from "./UserSpace";
 
@@ -24,13 +23,7 @@ const Navbar: React.FC<ScriptProps> = () => {
   }, [cookies.token]);
 
   return (
-    <Flex
-      padding="6px 12px"
-      bg="gray.400"
-      height="44px"
-      align="center"
-      justifyContent={{ md: "space-between" }}
-    >
+    <Flex padding="6px 12px" bg="gray.400" height="44px" align="center">
       {token && (
         <Icon
           as={FiAlignJustify}
@@ -41,13 +34,7 @@ const Navbar: React.FC<ScriptProps> = () => {
           cursor="pointer"
         />
       )}
-      <Icon
-        as={IoImageOutline}
-        fontSize={24}
-        mr={4}
-        color="black"
-        cursor="pointer"
-      />
+      <Spacer />
       <UserSpace />
     </Flex>
   );

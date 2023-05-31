@@ -23,6 +23,7 @@ const SignUpConfirmation: React.FC = () => {
         .then(() => {
           setIsSuccess(true);
           setMainText(t("success-text"));
+          setInterval(() => {}, 1500);
         })
         .catch(() => {
           setIsSuccess(false);

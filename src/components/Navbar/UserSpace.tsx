@@ -6,7 +6,7 @@ import LanguageButtons from "./LanguageButtons";
 const UserSpace: React.FC = () => {
   return (
     <>
-      <Flex align="center" gap="30px">
+      <Flex align="center" gap="15px">
         <LanguageButtons />
         <AuthButtons />
       </Flex>
