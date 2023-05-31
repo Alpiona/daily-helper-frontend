@@ -1,6 +1,7 @@
 import { useApi } from "@/hooks/useApi";
 import { UserService } from "@/services/User/UserService";
 import { Box, Flex, Text } from "@chakra-ui/react";
+import { GetStaticPropsContext } from "next";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -45,5 +46,13 @@ const SignUpConfirmation: React.FC = () => {
     </Box>
   );
 };
+
+export async function getStaticProps(context: GetStaticPropsContext) {
+  return {
+    props: {
+      messages: (await import(`../../lang/${context.locale}.json`)).default,
+    },
+  };
+}
 
 export default SignUpConfirmation;
