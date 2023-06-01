@@ -16,7 +16,6 @@ export const useApi = <
   const [data, setData] = useState<ResponseData<T>>();
   const [success, setSuccess] = useState<Boolean>(false);
   const [loading, setLoading] = useState(false);
-  const [requestMade, setRequestMade] = useState(false);
   const [, , removeCookie] = useCookies(["token"]);
   const toast = useToast();
   const router = useRouter();
@@ -24,15 +23,13 @@ export const useApi = <
 
   const request = async (...args: Parameters<typeof apiFunc>) => {
     setLoading(true);
-    setRequestMade(true);
-    setSuccess(true);
+    setSuccess(false);
 
     try {
       const result = await apiFunc(...args);
       setData(result.data.data);
+      setSuccess(true);
     } catch (err: any) {
-      setSuccess(false);
-
       if (err?.response?.data?.errors[0]?.message === "Access unauthorized") {
         removeCookie("token");
         router.push("/");
@@ -55,6 +52,5 @@ export const useApi = <
     loading,
     request,
     success,
-    requestMade,
   };
 };

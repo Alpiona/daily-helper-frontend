@@ -122,6 +122,7 @@
       "button-confirmation": "Create Bill"
     },
     "bill-edit": {
+      "title": "Edit Bill",
       "name-placeholder": "name",
       "description-placeholder": "description",
       "dueDay-placeholder": "due day",

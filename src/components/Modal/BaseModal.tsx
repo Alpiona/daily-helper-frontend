@@ -8,6 +8,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import CreateBill from "./Bill/CreateBill";
@@ -19,6 +20,7 @@ import EditPayment from "./Payment/EditPayment";
 const BaseModal: React.FC = () => {
   const [modal] = useRecoilState(modalState);
   const resetModal = useResetRecoilState(modalState);
+  const t = useTranslations("modal");
 
   const handleClose = () => {
     resetModal();
@@ -30,11 +32,11 @@ const BaseModal: React.FC = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign="center">
-            {modal.view === "createBill" && "Create Bill"}
-            {modal.view === "editBill" && "Edit Bill"}
-            {modal.view === "createPayment" && "Create Payment"}
-            {modal.view === "editPayment" && "Edit Payment"}
-            {modal.view === "deletePayment" && "Delete Payment"}
+            {modal.view === "createBill" && t("bill-create.title")}
+            {modal.view === "editBill" && t("bill-edit.title")}
+            {modal.view === "createPayment" && t("payment-create.title")}
+            {modal.view === "editPayment" && t("payment-edit.title")}
+            {modal.view === "deletePayment" && t("payment-delete.title")}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody

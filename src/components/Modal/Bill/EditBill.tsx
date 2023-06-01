@@ -14,7 +14,7 @@ const EditBill: React.FC<EditBillProps> = ({ data, handleEditBill }) => {
     description: data.description,
     dueDay: data.dueDay,
   });
-  const t = useTranslations("modal.bill-create");
+  const t = useTranslations("modal.bill-edit");
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

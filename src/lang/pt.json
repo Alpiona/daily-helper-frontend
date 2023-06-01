@@ -121,6 +121,7 @@
       "button-confirmation": "Criar Conta"
     },
     "bill-edit": {
+      "title": "Editar Conta",
       "name-placeholder": "nome",
       "description-placeholder": "descrição",
       "dueDay-placeholder": "dia de vencimento",
@@ -139,6 +140,7 @@
       "modal-text": "Deletar a conta também irá deletar todos os pagamentos dele, e não será possível recuperar os dados. Ainda deseja deletar?"
     },
     "payment-edit": {
+      "title": "Editar Pagamento",
       "paidAt-text": "Pago em:",
       "paidAt-placeholder": "pago em",
       "referenceMonth-text": "Mês de Referência:",

@@ -20,7 +20,7 @@ const EditPayment: React.FC<EditPaymentProps> = ({
   data,
 }) => {
   const [editPaymentForm, setEditPaymentForm] = useState<Payment>(data);
-  const t = useTranslations("payment-edit");
+  const t = useTranslations("modal.payment-edit");
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

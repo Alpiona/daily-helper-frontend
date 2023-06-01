@@ -5,7 +5,7 @@ import { GetStaticPropsContext } from "next";
 import { useTranslations } from "next-intl";
 import { default as NextLink } from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const SignUp: React.FC = () => {
   const [signUpForm, setSignUpForm] = useState({
@@ -38,16 +38,6 @@ const SignUp: React.FC = () => {
       passwordConfirmation: signUpForm.confirmPassword,
       locale: locale || "en",
     });
-
-    if (!signUpApi.loading && signUpApi.success) {
-      toast({
-        title: t("success-toast.title"),
-        description: t("success-toast.description"),
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +46,18 @@ const SignUp: React.FC = () => {
       [event.target.name]: event.target.value,
     }));
   };
+
+  useEffect(()=>{
+    if(!signUpApi.loading && signUpApi.success){
+      toast({
+        title: t("success-toast.title"),
+        description: t("success-toast.description"),
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [signUpApi.success])
 
   return (
     <Box margin={6}>

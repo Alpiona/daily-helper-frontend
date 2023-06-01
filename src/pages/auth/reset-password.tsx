@@ -1,6 +1,7 @@
 import { useApi } from "@/hooks/useApi";
 import { UserService } from "@/services/User/UserService";
 import { Box, Button, Input, useToast } from "@chakra-ui/react";
+import { GetStaticPropsContext } from "next";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -17,7 +18,7 @@ const ResetPassword: React.FC = () => {
   const t = useTranslations("page.auth.reset-password");
 
   useEffect(() => {
-    if (resetPasswordApi.requestMade && !resetPasswordApi.loading) {
+    if (!resetPasswordApi.loading && resetPasswordApi.success) {
       toast({
         title: t("success-toast.title"),
         description: t("success-toast.description"),
@@ -26,7 +27,7 @@ const ResetPassword: React.FC = () => {
         isClosable: true,
       });
     }
-  }, [resetPasswordApi.requestMade, resetPasswordApi.loading]);
+  }, [resetPasswordApi.success]);
 
   useEffect(() => {
     if (!token) {
@@ -124,5 +125,13 @@ const ResetPassword: React.FC = () => {
     </Box>
   );
 };
+
+export async function getStaticProps(context: GetStaticPropsContext) {
+  return {
+    props: {
+      messages: (await import(`../../lang/${context.locale}.json`)).default,
+    },
+  };
+}
 
 export default ResetPassword;

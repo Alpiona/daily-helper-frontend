@@ -56,7 +56,7 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({
     <>
       <form onSubmit={onSubmit}>
         <Text fontSize={14} as="b">
-          {t("text-paidAt")}
+          {t("paidAt-text")}
         </Text>
         <Input
           name="paidAt"
