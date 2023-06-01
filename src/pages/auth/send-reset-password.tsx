@@ -14,7 +14,7 @@ const SendResetPassword: React.FC = () => {
   const t = useTranslations("page.auth.send-reset-password");
 
   useEffect(() => {
-    if (sendResetPasswordApi.requestMade && !sendResetPasswordApi.loading) {
+    if (sendResetPasswordApi.success && !sendResetPasswordApi.loading) {
       toast({
         title: t("success-toast.title"),
         description: t("success-toast.description"),
@@ -23,7 +23,7 @@ const SendResetPassword: React.FC = () => {
         isClosable: true,
       });
     }
-  }, [sendResetPasswordApi.requestMade]);
+  }, [sendResetPasswordApi.success]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
