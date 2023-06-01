@@ -116,6 +116,7 @@
 
   "modal": {
     "bill-create": {
+      "title": "Create Bill",
       "name-placeholder": "name",
       "description-placeholder": "description",
       "dueDay-placeholder": "due day",
@@ -129,6 +130,7 @@
       "button-confirmation": "Edit Bill"
     },
     "payment-create": {
+      "title": "Create Payment",
       "paidAt-text": "Paid at:",
       "paidAt-placeholder": "paid at",
       "referenceMonth-text": "Reference Month:",
@@ -138,9 +140,11 @@
       "confirm-button": "Create Payment"
     },
     "payment-delete": {
+      "title": "Delete Payment",
       "modal-text": "Deleting the bill will also delete all payments on it, and it will not be possible to recover the data. Do you still want to delete?"
     },
     "payment-edit": {
+      "title": "Edit Payment",
       "paidAt-text": "Paid at:",
       "paidAt-placeholder": "paid at",
       "referenceMonth-text": "Reference Month:",
