@@ -6,7 +6,8 @@
       "E_VALIDATION_FAILURE": "Invalid data",
       "E_INVALID_CREDENTIALS": "Invalid credentials",
       "E_INTERNAL_ERROR":"Internal error! Please, try again later",
-      "E_UNIQUE_EMAIL": "E-mail already in use"
+      "E_UNIQUE_EMAIL": "E-mail already in use",
+      "E_INACTIVE_USER": "Unregistered user, please check if the e-mail confirmation was done"
     }
   },
 

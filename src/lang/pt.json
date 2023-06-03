@@ -5,7 +5,8 @@
       "E_UNAUTHORIZED_ACCESS": "Acesso não autorizado",
       "E_VALIDATION_FAILURE": "Dado inválido",
       "E_INVALID_CREDENTIALS": "Credenciais inválidas",
-      "E_INTERNAL_ERROR":"Erro interno! Por favor, tente novamente mais tarde!"
+      "E_INTERNAL_ERROR":"Erro interno! Por favor, tente novamente mais tarde!",
+      "E_INACTIVE_USER": "Usuário não registrado, verifique se foi feito a confirmação por e-mail"
     }
   },
 
